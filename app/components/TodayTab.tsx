@@ -296,16 +296,14 @@ export function TodayTab({
                         {reading.value}
                       </p>
                       <motion.a
-                        href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(
-                          reading.value
-                        )}&version=NIV`}
+                        href="https://www.stepbible.org/version.jsp?version=AmhNASV"
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`btn-primary inline-flex items-center gap-2 text-sm`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        Read on BibleGateway
+                        Read here
                         <span>→</span>
                       </motion.a>
                     </div>
