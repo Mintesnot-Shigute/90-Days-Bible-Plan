@@ -178,9 +178,17 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
           {/* form */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold mb-2.5" style={{ color: "#8a7456" }}>Your name</label>
+              <label className="block text-sm font-semibold mb-2.5" style={{
+  color: "#8a7456",
+  fontSize: "20px",
+  paddingTop: "10px",
+  paddingBottom: "10px",
+  textAlign: "center",
+}}
+>Your name</label>
               <input
                 type="text"
+                
                 value={newName}
                 onChange={(e) => {
                   setNewName(e.target.value);
@@ -195,6 +203,10 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
                 style={{
                   background: "#fbf5e9",
                   color: "#3a2a18",
+                  fontSize: "24px",
+                  textAlign: "center",
+                    paddingTop: "10px",
+                    paddingBottom: "10px",
                   border: focused ? "2px solid #b8860b" : "1.5px solid #e2d3b6",
                   boxShadow: focused ? "0 0 0 3px rgba(184,134,11,0.1)" : "none",
                 }}
@@ -220,7 +232,8 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
               className="w-full py-3.5 rounded-lg text-white font-bold text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
               style={{
                 background: "linear-gradient(135deg, #d4af37 0%, #b8860b 100%)",
-                boxShadow: "0 10px 24px -6px rgba(184,134,11,0.5)",
+                boxShadow: "0 10px 24px -6px rgba(0, 0, 0, 0.5)", paddingTop: "10px",
+                    paddingBottom: "10px",color: "#000000",
               }}
             >
               {isJoining ? (
@@ -231,7 +244,7 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
               ) : (
                 <>
                   Begin the journey
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 text-black font-bold" />
                 </>
               )}
             </motion.button>
@@ -239,7 +252,7 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
         </motion.div>
 
         {/* footer */}
-        <p className="text-center text-sm font-medium mt-8" style={{ color: "#b3a081" }}>
+        <p className="text-center text-sm font-medium mt-8" style={{ color: "#070400" }}>
           ✨ Begin your 90-day spiritual transformation
         </p>
       </motion.div>
