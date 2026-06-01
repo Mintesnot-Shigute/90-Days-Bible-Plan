@@ -1,6 +1,7 @@
 import { Progress, Reader } from "../types";
 import { countCompleteDays, calculateStreak, calculateGroupPercent } from "../lib/stats";
 import { Flame, Menu } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface HeaderProps {
   currentReader: string;
@@ -19,40 +20,77 @@ export function Header({
   const streak = calculateStreak(currentReader, progress);
   const groupPercent = calculateGroupPercent(readers, progress);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+  };
+
   return (
-    <header className="bg-white border-b-2 border-gold sticky top-0 z-40">
-      <div className="max-w-md mx-auto px-5 sm:px-6 py-3 sm:py-4">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-lg sm:text-2xl font-serif text-ink truncate pl-2 pr-1 ml-1">{currentReader}</h1>
-          <button
+    <header className="sticky top-0 z-40 backdrop-blur-md bg-white bg-opacity-80 border-b border-gold border-opacity-20 shadow-soft">
+      <motion.div
+        className="max-w-md mx-auto px-5 sm:px-6 py-4 sm:py-5"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        {/* Reader name */}
+        <motion.div className="flex items-center justify-between mb-4" variants={itemVariants}>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink pl-2">{currentReader}</h1>
+          <motion.button
             onClick={onOpenMenu}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 ml-2"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            className="p-2 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors ml-2"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-ink" />
-          </button>
-        </div>
-        <div className="flex items-center justify-between text-xs sm:text-sm gap-2 pl-2 pr-1">
-          <div className="flex gap-2 sm:gap-4">
-            <div className="min-w-max">
-              <p className="text-gray-600">Progress</p>
-              <p className="font-bold text-ink">{daysComplete}/90</p>
+          </motion.button>
+        </motion.div>
+
+        {/* Stats row with better spacing */}
+        <motion.div className="flex items-center justify-between text-xs sm:text-sm gap-4 pl-2" variants={itemVariants}>
+          <motion.div className="flex gap-4 sm:gap-6" whileHover={{ scale: 1.02 }}>
+            {/* Progress */}
+            <div className="flex flex-col">
+              <span className="text-ink-light text-caption uppercase tracking-wide font-medium">Progress</span>
+              <span className="text-xl sm:text-2xl font-serif font-bold text-ink mt-1">{daysComplete}/90</span>
             </div>
+
+            {/* Streak */}
             {streak > 0 && (
-              <div className="flex items-center gap-1">
-                <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-gold flex-shrink-0" />
-                <div>
-                  <p className="text-gray-600">Streak</p>
-                  <p className="font-bold text-ink">{streak}</p>
+              <div className="flex items-start gap-2">
+                <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-gold flex-shrink-0 mt-0.5 animate-pulse-gentle" />
+                <div className="flex flex-col">
+                  <span className="text-ink-light text-caption uppercase tracking-wide font-medium">Streak</span>
+                  <span className="text-xl sm:text-2xl font-serif font-bold text-gold mt-1">{streak}</span>
                 </div>
               </div>
             )}
-          </div>
-          <div className="text-right flex-shrink-0">
-            <p className="text-gray-600">Group</p>
-            <p className="text-base sm:text-lg font-bold text-gold">{groupPercent}%</p>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+
+          {/* Group percentage */}
+          <motion.div 
+            className="flex flex-col items-end"
+            whileHover={{ scale: 1.05 }}
+          >
+            <span className="text-ink-light text-caption uppercase tracking-wide font-medium">Group</span>
+            <span className="text-xl sm:text-2xl font-serif font-bold text-gold mt-1">{groupPercent}%</span>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </header>
   );
 }

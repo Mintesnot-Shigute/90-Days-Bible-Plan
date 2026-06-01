@@ -1,4 +1,5 @@
 import { ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 type ReadingType = "ot" | "nt" | "ps" | "pr";
 
@@ -6,38 +7,38 @@ interface ReadingSectionProps {
   type: ReadingType;
   label: string;
   reference: string;
-  percentage: number; // 0, 25, 50, 75, or 100
+  percentage: number;
   isExpanded: boolean;
   onPercentageChange: (pct: number) => void;
   onToggleExpand: () => void;
   children?: React.ReactNode;
-  isLocked?: boolean; // for future day gating
+  isLocked?: boolean;
 }
 
 const readingConfig = {
   ot: {
-    color: "border-amber-700 bg-amber-700 bg-opacity-10",
+    color: "#b45d0f",
+    lightColor: "rgba(180, 93, 15, 0.1)",
     icon: "📕",
-    accent: "text-amber-700",
-    accentBg: "bg-amber-700",
+    label: "Old Testament",
   },
   nt: {
-    color: "border-red-700 bg-red-700 bg-opacity-10",
+    color: "#b91c1c",
+    lightColor: "rgba(185, 28, 28, 0.1)",
     icon: "📗",
-    accent: "text-red-700",
-    accentBg: "bg-red-700",
+    label: "New Testament",
   },
   ps: {
-    color: "border-blue-700 bg-blue-700 bg-opacity-10",
+    color: "#1e40af",
+    lightColor: "rgba(30, 64, 175, 0.1)",
     icon: "📘",
-    accent: "text-blue-700",
-    accentBg: "bg-blue-700",
+    label: "Psalms",
   },
   pr: {
-    color: "border-purple-700 bg-purple-700 bg-opacity-10",
+    color: "#6b21a8",
+    lightColor: "rgba(107, 33, 168, 0.1)",
     icon: "📙",
-    accent: "text-purple-700",
-    accentBg: "bg-purple-700",
+    label: "Proverbs",
   },
 };
 
@@ -57,88 +58,145 @@ export function ReadingSection({
   const config = readingConfig[type];
   const isComplete = percentage === 100;
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: -8 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+  };
+
+  const expandVariants = {
+    collapsed: { height: 0, opacity: 0 },
+    expanded: { 
+      height: "auto", 
+      opacity: 1,
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div>
-      {/* Main Header */}
-      <button
+    <motion.div variants={containerVariants}>
+      {/* Main Header Button */}
+      <motion.button
         onClick={onToggleExpand}
         disabled={isLocked}
-        className={`w-full p-3 sm:p-4 rounded-lg border-2 transition-all ${
+        whileHover={isLocked ? {} : { y: -2 }}
+        whileTap={isLocked ? {} : { scale: 0.98 }}
+        className={`w-full p-4 sm:p-5 rounded-xl transition-all border ${
           isLocked
-            ? "opacity-50 cursor-not-allowed border-gray-300 bg-gray-100"
+            ? "opacity-50 cursor-not-allowed border-gray-200 bg-gray-50"
             : isComplete
-            ? `${config.color} border-2 ${config.accentBg.replace("bg-", "border-")}`
-            : "border-gray-300 hover:border-opacity-50 hover:bg-opacity-5"
+            ? `border-2 shadow-elevation`
+            : `border shadow-soft hover:shadow-subtle`
         }`}
+        style={{
+          borderColor: isLocked ? "transparent" : isComplete ? config.color : "rgba(26, 26, 26, 0.1)",
+          backgroundColor: isLocked ? "rgba(0, 0, 0, 0.02)" : isComplete ? config.lightColor : "rgba(255, 255, 255, 0.5)",
+        }}
       >
-        <div className="flex items-start justify-between gap-2 sm:gap-3">
-          <div className="flex items-start flex-1 gap-2 sm:gap-3">
-            {/* Percentage Badge */}
-            <div
-              className={`w-8 h-8 sm:w-7 sm:h-7 rounded flex-shrink-0 flex items-center justify-center font-bold text-white text-xs transition-colors ${
-                isComplete
-                  ? `${config.accentBg}`
-                  : "bg-gray-300"
-              }`}
+        <div className="flex items-start justify-between gap-3 sm:gap-4">
+          <div className="flex items-start flex-1 gap-3 sm:gap-4">
+            {/* Animated Percentage Badge */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 10 }}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-white text-sm shadow-soft"
+              style={{
+                backgroundColor: isLocked ? "rgba(0, 0, 0, 0.2)" : isComplete ? config.color : "#c4b5a0",
+              }}
             >
               {percentage}%
-            </div>
+            </motion.div>
 
             {/* Content */}
             <div className="text-left flex-1 min-w-0">
-              <p className="text-xs sm:text-xs font-bold uppercase tracking-wide text-gray-600">
+              <p className="text-xs sm:text-xs font-medium uppercase tracking-widest text-ink-light">
                 {config.icon} {label}
               </p>
-              <p className={`text-sm sm:text-base font-medium ${config.accent} truncate`}>
+              <p 
+                className="text-sm sm:text-base font-serif font-semibold mt-1 truncate"
+                style={{ color: config.color }}
+              >
                 {reference}
               </p>
             </div>
           </div>
 
-          {/* Chevron */}
-          <ChevronDown
-            className={`w-5 h-5 ${config.accent} transition-transform flex-shrink-0 ${
-              isExpanded ? "transform rotate-180" : ""
-            }`}
-          />
+          {/* Animated Chevron */}
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex-shrink-0"
+          >
+            <ChevronDown 
+              className="w-5 h-5 sm:w-6 sm:h-6"
+              style={{ color: config.color, opacity: isLocked ? 0.5 : 1 }}
+            />
+          </motion.div>
         </div>
-      </button>
+      </motion.button>
 
-      {/* Expanded Content with Percentage Selector */}
-      {isExpanded && (
-        <div className="mt-3 space-y-3">
-          {children}
-
-          {/* Percentage Selector */}
-          <div className="p-4 bg-parchment rounded-lg space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-              Completion
-            </p>
-            <div className="grid grid-cols-5 gap-2">
-              {percentOptions.map((pct) => (
-                <button
-                  key={pct}
-                  onClick={() => {
-                    if (!isLocked) {
-                      onPercentageChange(pct);
-                    }
-                  }}
-                  disabled={isLocked}
-                  className={`py-2 px-2 rounded-lg font-semibold text-sm transition-all ${
-                    isLocked
-                      ? "opacity-50 cursor-not-allowed"
-                      : percentage === pct
-                      ? `${config.accentBg} text-white shadow-md`
-                      : `bg-white border-2 border-gray-200 hover:border-opacity-70 text-gray-700`
-                  }`}
-                >
-                  {pct}%
-                </button>
-              ))}
-            </div>
+      {/* Expanded Content */}
+      <motion.div
+        initial="collapsed"
+        animate={isExpanded ? "expanded" : "collapsed"}
+        variants={expandVariants}
+        overflow="hidden"
+        className="mt-2"
+      >
+        {/* Bible content and verse */}
+        {children && (
+          <div className="mb-4">
+            {children}
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Polished Percentage Selector */}
+        <motion.div 
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.3 }}
+          className="p-4 sm:p-5 rounded-xl shadow-soft border"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.6)",
+            borderColor: "rgba(26, 26, 26, 0.08)",
+          }}
+        >
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink-light mb-3 sm:mb-4">
+            Mark Completion
+          </p>
+          
+          {/* Segmented Control */}
+          <div className="flex gap-2 sm:gap-2.5 p-1.5 rounded-lg bg-white bg-opacity-50 border border-gray-100">
+            {percentOptions.map((pct, idx) => (
+              <motion.button
+                key={pct}
+                onClick={() => {
+                  if (!isLocked) {
+                    onPercentageChange(pct);
+                  }
+                }}
+                disabled={isLocked}
+                whileHover={isLocked ? {} : { scale: 1.05 }}
+                whileTap={isLocked ? {} : { scale: 0.95 }}
+                className={`flex-1 py-2.5 sm:py-3 px-1 sm:px-2 rounded-md font-semibold text-xs sm:text-sm transition-all ${
+                  isLocked ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                style={{
+                  backgroundColor: percentage === pct ? config.color : "transparent",
+                  color: percentage === pct ? "white" : config.color,
+                  boxShadow: percentage === pct ? "0 4px 12px rgba(26, 26, 26, 0.15)" : "none",
+                }}
+              >
+                {pct}%
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }

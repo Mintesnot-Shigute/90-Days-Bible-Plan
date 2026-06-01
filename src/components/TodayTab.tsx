@@ -1,14 +1,17 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { PLAN } from "../plan";
 import { Progress, Reader } from "../types";
 import { isDayComplete, getDayPercent } from "../lib/stats";
 import { getTodaysDayNumber, getDayDate, formatDateShort, isPlanComplete } from "../lib/dates";
 import { getReaderStatus } from "../lib/groupStats";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { motion } from "framer-motion";
 import { supabase } from "../lib/supabase";
 import { ReadingSection } from "./ReadingSection";
 import { DayGroupTracker } from "./DayGroupTracker";
 import { ActivityFeed } from "./ActivityFeed";
+import { AnimatedProgressRing } from "./AnimatedProgressRing";
+import { Celebration } from "./Celebration";
 
 interface TodayTabProps {
   currentReader: string;
@@ -33,6 +36,8 @@ export function TodayTab({
   });
 
   const [expandedReading, setExpandedReading] = useState<"ot" | "nt" | "ps" | "pr" | null>(null);
+  const [celebrateDay, setCelebrateDay] = useState(false);
+  const [previousPercentage, setPreviousPercentage] = useState(0);
 
   const dayPlan = useMemo(
     () => PLAN.find((p) => p.day === selectedDay),
@@ -47,7 +52,6 @@ export function TodayTab({
     [progress, currentReader, selectedDay]
   );
 
-  // Calculate reader's current day number (first incomplete day)
   const readerCurrentDay = useMemo(() => {
     for (let day = 1; day <= 90; day++) {
       if (!isDayComplete(currentReader, day, progress)) {
@@ -57,14 +61,19 @@ export function TodayTab({
     return 90;
   }, [progress, currentReader]);
 
-  // Calculate day percentage (average of 4 sections)
   const dayPercentage = useMemo(() => {
     return getDayPercent(currentReader, selectedDay, progress);
   }, [currentReader, selectedDay, progress]);
 
-  // Day-gating: check if day is in future
-  const isDayLocked = selectedDay > todaysDayNumber;
+  // Trigger celebration when day completes
+  useEffect(() => {
+    if (dayPercentage === 100 && previousPercentage < 100) {
+      setCelebrateDay(true);
+    }
+    setPreviousPercentage(dayPercentage);
+  }, [dayPercentage, previousPercentage]);
 
+  const isDayLocked = selectedDay > todaysDayNumber;
   const readerStatus = getReaderStatus(readerCurrentDay, todaysDayNumber);
 
   const updateReading = async (field: "ot" | "nt" | "ps" | "pr", value: number) => {
@@ -91,147 +100,250 @@ export function TodayTab({
   if (!dayPlan) return null;
 
   const readings = [
-    { key: "ot" as const, label: "Old Testament", value: dayPlan.ot },
-    { key: "nt" as const, label: "New Testament", value: dayPlan.nt },
-    { key: "ps" as const, label: "Psalms", value: dayPlan.ps },
-    { key: "pr" as const, label: "Proverbs", value: dayPlan.pr },
+    { key: "ot" as const, label: "Old Testament", value: dayPlan.ot, color: "#b45d0f" },
+    { key: "nt" as const, label: "New Testament", value: dayPlan.nt, color: "#b91c1c" },
+    { key: "ps" as const, label: "Psalms", value: dayPlan.ps, color: "#1e40af" },
+    { key: "pr" as const, label: "Proverbs", value: dayPlan.pr, color: "#6b21a8" },
   ];
 
   const getStatusBadge = () => {
     if (isDayLocked) {
-      return <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full font-medium flex items-center gap-1"><Lock className="w-3 h-3" /> Locked</span>;
+      return (
+        <motion.span 
+          className="text-xs px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full font-medium flex items-center gap-1 shadow-soft"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 10 }}
+        >
+          <Lock className="w-3 h-3" /> Locked
+        </motion.span>
+      );
     }
-    if (readerStatus === "ahead") {
-      return <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full font-medium">Ahead 🚀</span>;
-    }
-    if (readerStatus === "on-track") {
-      return <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">On track 📍</span>;
-    }
-    return <span className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded-full font-medium">Catching up 💪</span>;
+    
+    const badgeStyles = {
+      ahead: { bg: "bg-green-50", text: "text-green-700", label: "Ahead 🚀" },
+      "on-track": { bg: "bg-blue-50", text: "text-blue-700", label: "On track 📍" },
+      behind: { bg: "bg-amber-50", text: "text-amber-700", label: "Catching up 💪" },
+    };
+
+    const style = badgeStyles[readerStatus as keyof typeof badgeStyles] || badgeStyles.behind;
+
+    return (
+      <motion.span 
+        className={`text-xs px-3 py-1.5 rounded-full font-medium shadow-soft border ${style.bg} ${style.text} border-current border-opacity-20`}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 10 }}
+      >
+        {style.label}
+      </motion.span>
+    );
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
   };
 
   return (
-    <div className="pb-8 px-5 sm:px-6 max-w-md mx-auto space-y-6">
+    <motion.div 
+      className="pb-8 px-5 sm:px-6 max-w-md mx-auto space-y-5 sm:space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <Celebration trigger={celebrateDay} />
+
       {/* Day Navigation */}
-      <div className="flex items-center justify-between pt-6">
-        <button
+      <motion.div 
+        className="flex items-center justify-between pt-4 sm:pt-6"
+        variants={itemVariants}
+      >
+        <motion.button
           onClick={() => setSelectedDay(Math.max(1, selectedDay - 1))}
           disabled={selectedDay === 1}
-          className="p-2 disabled:opacity-50 hover:bg-gold hover:bg-opacity-10 rounded transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="p-2 disabled:opacity-40 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors"
         >
-          <ChevronLeft className="w-6 h-6 text-gold" />
-        </button>
+          <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 text-gold" />
+        </motion.button>
         
-        <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl font-serif text-ink">
+        <div className="text-center flex-1">
+          <motion.h2 
+            className="text-2xl sm:text-3xl font-serif font-bold text-ink"
+            key={selectedDay}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
             Day {selectedDay}
-          </h2>
-          <p className="text-sm text-gray-600 mt-1">
+          </motion.h2>
+          <p className="text-sm text-ink-light mt-1">
             {formatDateShort(getDayDate(selectedDay))}
           </p>
           {selectedDay === todaysDayNumber && (
-            <p className="text-xs text-gold font-medium mt-1">Today</p>
+            <motion.p 
+              className="text-xs text-gold font-medium mt-1.5 font-semibold"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              Today
+            </motion.p>
           )}
           {isDayLocked && (
-            <p className="text-xs text-gray-500 mt-1 flex items-center justify-center gap-1">
+            <motion.p 
+              className="text-xs text-ink-light mt-1.5 flex items-center justify-center gap-1 font-medium"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
               <Lock className="w-3 h-3" /> Unlocks tomorrow
-            </p>
+            </motion.p>
           )}
         </div>
 
-        <button
+        <motion.button
           onClick={() => setSelectedDay(Math.min(90, selectedDay + 1))}
           disabled={selectedDay === 90 || isDayLocked}
-          className="p-2 disabled:opacity-50 hover:bg-gold hover:bg-opacity-10 rounded transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="p-2 disabled:opacity-40 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors"
         >
-          <ChevronRight className="w-6 h-6 text-gold" />
-        </button>
-      </div>
+          <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7 text-gold" />
+        </motion.button>
+      </motion.div>
 
-      {/* Day Percentage Display */}
-      <div className="bg-parchment rounded-lg p-4 text-center">
-        <p className="text-4xl sm:text-5xl font-bold text-gold">
-          {dayPercentage}%
+      {/* Day Percentage Display with Animated Ring */}
+      <motion.div 
+        className="flex flex-col items-center justify-center py-4 sm:py-6 px-4 sm:px-6 rounded-2xl shadow-elevation"
+        style={{
+          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.5) 100%)",
+          border: "1px solid rgba(184, 134, 11, 0.1)",
+        }}
+        variants={itemVariants}
+      >
+        <AnimatedProgressRing 
+          percentage={dayPercentage} 
+          size={140}
+          strokeWidth={8}
+          color="#b8860b"
+          backgroundColor="#d4a574"
+        />
+        <p className="text-xs sm:text-sm text-ink-light uppercase tracking-widest font-medium mt-4">
+          {dayPercentage === 100 ? "Day Complete!" : "Today's Progress"}
         </p>
-        <p className="text-xs sm:text-sm text-gray-600 mt-2">
-          {dayPercentage === 100 ? "Day Complete! 🎉" : "Today's Progress"}
-        </p>
-      </div>
+      </motion.div>
 
       {/* Reader Status */}
-      <div className="flex items-center justify-between pl-2 pr-1">
-        <p className="text-sm text-gray-600">Your status</p>
+      <motion.div 
+        className="flex items-center justify-between pl-2"
+        variants={itemVariants}
+      >
+        <p className="text-sm font-medium text-ink-light uppercase tracking-wide">Status</p>
         {getStatusBadge()}
-      </div>
+      </motion.div>
 
       {/* Day Group Tracker */}
-      <DayGroupTracker day={selectedDay} readers={readers} progress={progress} />
+      <motion.div variants={itemVariants}>
+        <DayGroupTracker day={selectedDay} readers={readers} progress={progress} />
+      </motion.div>
 
-      {/* Readings */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-ink pl-2 pr-1">Today's Readings</h3>
-        {readings.map((reading) => {
-          const percentage = ((dayProgress as any)?.[reading.key] ?? 0) as number;
-          const isExpanded = expandedReading === reading.key;
+      {/* Readings Section */}
+      <motion.div className="space-y-4" variants={itemVariants}>
+        <h3 className="text-sm font-semibold text-ink pl-2 uppercase tracking-wide">Readings for Today</h3>
+        <motion.div 
+          className="space-y-3"
+          variants={containerVariants}
+        >
+          {readings.map((reading, idx) => {
+            const percentage = ((dayProgress as any)?.[reading.key] ?? 0) as number;
+            const isExpanded = expandedReading === reading.key;
 
-          return (
-            <div key={reading.key}>
-              <ReadingSection
-                type={reading.key}
-                label={reading.label}
-                reference={reading.value}
-                percentage={percentage}
-                isExpanded={isExpanded}
-                onPercentageChange={(pct) => updateReading(reading.key, pct)}
-                onToggleExpand={() =>
-                  setExpandedReading(isExpanded ? null : reading.key)
-                }
-                isLocked={isDayLocked}
+            return (
+              <motion.div 
+                key={reading.key}
+                variants={itemVariants}
+                custom={idx}
               >
-                {/* Verse Display */}
-                {isExpanded && (
-                  <div className="bg-cream border border-l-4 rounded-r-lg p-4 mt-2 max-h-96 overflow-y-auto"
-                       style={{
-                         borderLeftColor: reading.key === "ot" ? "#b45d0f" : 
-                                         reading.key === "nt" ? "#b91c1c" :
-                                         reading.key === "ps" ? "#1e40af" : "#6b21a8"
-                       }}>
-                    <div className="space-y-3">
-                      <p className="text-gray-600 text-sm">
-                        <span className="font-medium">{reading.value}</span>
-                      </p>
-                      <a
-                        href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(
-                          reading.value
-                        )}&version=NIV`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all"
-                        style={{
-                          backgroundColor: reading.key === "ot" ? "rgba(180, 93, 15, 0.1)" : 
-                                          reading.key === "nt" ? "rgba(185, 28, 28, 0.1)" :
-                                          reading.key === "ps" ? "rgba(30, 64, 175, 0.1)" : "rgba(107, 33, 168, 0.1)",
-                          color: reading.key === "ot" ? "#b45d0f" : 
-                                reading.key === "nt" ? "#b91c1c" :
-                                reading.key === "ps" ? "#1e40af" : "#6b21a8"
-                        }}
-                      >
-                        Read on BibleGateway.com
-                        <span>→</span>
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </ReadingSection>
-            </div>
-          );
-        })}
-      </div>
+                <ReadingSection
+                  type={reading.key}
+                  label={reading.label}
+                  reference={reading.value}
+                  percentage={percentage}
+                  isExpanded={isExpanded}
+                  onPercentageChange={(pct) => updateReading(reading.key, pct)}
+                  onToggleExpand={() =>
+                    setExpandedReading(isExpanded ? null : reading.key)
+                  }
+                  isLocked={isDayLocked}
+                >
+                  {/* Verse Display */}
+                  {isExpanded && (
+                    <motion.div 
+                      className="p-4 sm:p-5 rounded-lg shadow-soft border"
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.7)",
+                        borderColor: reading.color,
+                        borderLeft: `4px solid ${reading.color}`,
+                      }}
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="space-y-3">
+                        <p className="text-sm text-ink-light font-medium">
+                          <span className="font-semibold text-ink">{reading.value}</span>
+                        </p>
+                        <motion.a
+                          href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(
+                            reading.value
+                          )}&version=NIV`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all shadow-soft"
+                          style={{
+                            backgroundColor: `${reading.color}15`,
+                            color: reading.color,
+                          }}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          Read on BibleGateway
+                          <span>→</span>
+                        </motion.a>
+                      </div>
+                    </motion.div>
+                  )}
+                </ReadingSection>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </motion.div>
 
       {/* Activity Feed */}
-      <div className="border-t pt-4">
+      <motion.div 
+        className="border-t border-gold border-opacity-20 pt-4 sm:pt-5"
+        variants={itemVariants}
+      >
         <ActivityFeed readers={readers} progress={progress} />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

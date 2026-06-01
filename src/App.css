@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz@9..144&family=Outfit:wght@400;500;600;700&display=swap");
 
-/* App styles are handled by Tailwind CSS */
+/* Premium baseline styles */
 * {
   font-family: "Outfit", sans-serif;
 }
@@ -12,9 +12,68 @@ h1, h2, h3, h4, h5, h6 {
 body {
   margin: 0;
   padding: 0;
+  background: linear-gradient(135deg, #f9f6f3 0%, #f5f1ed 50%, #f9f6f3 100%);
+  position: relative;
+}
+
+/* Subtle paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(26, 26, 26, 0.01) 2px,
+      rgba(26, 26, 26, 0.01) 4px
+    );
+  pointer-events: none;
+  z-index: -1;
 }
 
 #root {
   width: 100%;
+  min-height: 100vh;
 }
+
+/* Smooth transitions on all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Premium focus states for accessibility */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #b8860b;
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f9f6f3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4a574;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b8860b;
+}
+
 

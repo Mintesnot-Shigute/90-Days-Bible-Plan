@@ -9,3 +9,5 @@ export { ActivityFeed } from "./ActivityFeed";
 export { CalendarHeatmap } from "./CalendarHeatmap";
 export { GroupProgressHero } from "./GroupProgressHero";
 export { ReadingSection } from "./ReadingSection";
+export { AnimatedProgressRing } from "./AnimatedProgressRing";
+export { Celebration } from "./Celebration";
