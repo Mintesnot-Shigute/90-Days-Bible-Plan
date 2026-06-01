@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import { Reader, Progress } from "../types";
 import { countCompleteDays, calculateStreak, calculateGroupPercent } from "../lib/stats";
-import { Flame } from "lucide-react";
+import { Flame, TrendingUp } from "lucide-react";
+import { GroupProgressHero } from "./GroupProgressHero";
+import { CalendarHeatmap } from "./CalendarHeatmap";
 
 interface GroupTabProps {
   currentReader: string;
@@ -35,19 +37,11 @@ export function GroupTab({
   }, [readers, progress]);
 
   return (
-    <div className="pb-8 px-2 sm:px-0">
-      <div className="mb-6 sm:mb-8">
-        <div className="flex items-baseline justify-between mb-3">
-          <h2 className="text-base sm:text-lg font-serif text-ink">Group Progress</h2>
-          <span className="text-xl sm:text-2xl font-bold text-gold">{groupPercent}%</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
-          <div
-            className="bg-gold h-full transition-all duration-500"
-            style={{ width: `${groupPercent}%` }}
-          />
-        </div>
-      </div>
+    <div className="pb-8 px-2 sm:px-0 space-y-6">
+      {/* Progress Hero */}
+      <GroupProgressHero readers={readers} progress={progress} />
+
+      {/* Leaderboard */}
 
       <div>
         <h2 className="text-base sm:text-lg font-serif text-ink mb-3 sm:mb-4">Leaderboard</h2>
@@ -94,6 +88,16 @@ export function GroupTab({
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Individual Heatmaps */}
+      <div className="border-t pt-6">
+        <h3 className="text-base sm:text-lg font-serif text-ink mb-4">Individual Heatmaps</h3>
+        <div className="space-y-6">
+          {leaderboard.map((entry) => (
+            <CalendarHeatmap key={entry.name} reader={entry.name} progress={progress} />
+          ))}
         </div>
       </div>
     </div>

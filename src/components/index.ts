@@ -3,3 +3,8 @@ export { Header } from "./Header";
 export { TodayTab } from "./TodayTab";
 export { PlanTab } from "./PlanTab";
 export { GroupTab } from "./GroupTab";
+export { DayGroupTracker } from "./DayGroupTracker";
+export { ActivityFeed } from "./ActivityFeed";
+export { CalendarHeatmap } from "./CalendarHeatmap";
+export { GroupProgressHero } from "./GroupProgressHero";
+export { ReadingSection } from "./ReadingSection";
