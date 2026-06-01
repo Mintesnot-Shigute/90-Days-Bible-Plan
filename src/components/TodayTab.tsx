@@ -245,7 +245,7 @@ export function TodayTab({
           color="#b8860b"
           backgroundColor="#d4a574"
         />
-        <p className="text-xs sm:text-sm text-ink-light uppercase tracking-widest font-medium mt-4">
+        <p className="text-xs sm:text-sm text-ink-light uppercase tracking-widest font-medium mt-4 pl-3">
           {dayPercentage === 100 ? "Day Complete!" : "Today's Progress"}
         </p>
       </motion.div>
@@ -255,7 +255,7 @@ export function TodayTab({
         className="flex items-center justify-between pl-2"
         variants={itemVariants}
       >
-        <p className="text-sm font-medium text-ink-light uppercase tracking-wide">Status</p>
+        <p className="text-sm font-medium text-ink-light uppercase tracking-wide pl-3">Status</p>
         {getStatusBadge()}
       </motion.div>
 

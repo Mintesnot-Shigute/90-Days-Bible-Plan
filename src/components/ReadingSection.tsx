@@ -164,7 +164,7 @@ export function ReadingSection({
             borderColor: "rgba(26, 26, 26, 0.08)",
           }}
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-ink-light mb-3 sm:mb-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink-light mb-3 sm:mb-4 pl-3">
             Mark Completion
           </p>
           

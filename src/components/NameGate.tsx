@@ -55,8 +55,8 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
       return;
     }
 
-    if (newPassword.length < 4) {
-      setError("Password must be at least 4 characters");
+    if (newPassword.length < 2) {
+      setError("Password must be at least 2 characters");
       return;
     }
 
@@ -138,7 +138,7 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
                   }
                 }}
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 border-2 border-gold border-opacity-30 rounded-lg mb-3 text-ink focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border-2 border-gold border-opacity-30 rounded-xl mb-3 text-ink focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold focus:ring-opacity-50 focus:shadow-glow transition-all hover:border-opacity-50 bg-white hover:bg-gray-50"
                 autoFocus
               />
               {error && (
@@ -157,9 +157,10 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
                 onClick={handleVerifyPassword}
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full px-4 py-3 bg-gradient-to-r from-gold to-gold-light text-white rounded-lg hover:shadow-glow transition-all font-semibold uppercase tracking-widest text-sm"
+                className="w-full px-4 py-3 bg-gradient-to-r from-gold to-gold-light text-white rounded-xl hover:shadow-elevation transition-all font-semibold uppercase tracking-widest text-sm border-0 cursor-pointer group overflow-hidden relative"
               >
-                Unlock Account
+                <span className="relative z-10">Unlock Account</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-gold-dark to-gold-light opacity-0 group-hover:opacity-100 transition-opacity" />
               </motion.button>
               <motion.button
                 onClick={() => {
@@ -189,6 +190,14 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
         transition={{ duration: 0.5 }}
       >
         <motion.div className="text-center mb-8">
+          <motion.p
+            className="text-xs sm:text-sm text-gold font-light tracking-widest mb-2 font-serif italic"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+          >
+            Naioth in Ramah
+          </motion.p>
           <motion.h1 
             className="text-5xl sm:text-6xl font-serif text-ink mb-3"
             initial={{ opacity: 0, y: -20 }}
@@ -208,10 +217,11 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
         </motion.div>
 
         <motion.div 
-          className="bg-white rounded-2xl shadow-elevation p-6 sm:p-8 border border-gold border-opacity-30 backdrop-blur-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          className="bg-white rounded-3xl shadow-elevation p-6 sm:p-8 border-2 border-gold border-opacity-40 backdrop-blur-sm hover:border-opacity-60 transition-all"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
+          whileHover={{ y: -2 }}
         >
           {readers.length > 0 && (
             <motion.div 
@@ -270,12 +280,12 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
                     setError("");
                   }}
                   placeholder="Enter your name"
-                  className="w-full px-4 py-3 border-2 border-gold border-opacity-30 rounded-lg text-ink focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border-2 border-gold border-opacity-30 rounded-xl text-ink focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold focus:ring-opacity-50 focus:shadow-glow transition-all hover:border-opacity-50 bg-white hover:bg-gray-50"
                   disabled={isJoining}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink-light mb-1.5 uppercase tracking-widest">Password (4+ characters)</label>
+                <label className="block text-xs font-semibold text-ink-light mb-1.5 uppercase tracking-widest">Password (2+ characters)</label>
                 <input
                   type="password"
                   value={newPassword}
@@ -284,7 +294,7 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
                     setError("");
                   }}
                   placeholder="Create a password"
-                  className="w-full px-4 py-3 border-2 border-gold border-opacity-30 rounded-lg text-ink focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border-2 border-gold border-opacity-30 rounded-xl text-ink focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold focus:ring-opacity-50 focus:shadow-glow transition-all hover:border-opacity-50 bg-white hover:bg-gray-50"
                   disabled={isJoining}
                 />
               </div>
@@ -307,9 +317,10 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
                 disabled={isJoining}
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full px-4 py-3 bg-gradient-to-r from-gold to-gold-light text-white rounded-lg hover:shadow-glow transition-all font-semibold uppercase tracking-widest text-sm disabled:opacity-50 mt-2"
+                className="w-full px-4 py-3 bg-gradient-to-r from-gold to-gold-light text-white rounded-xl hover:shadow-elevation transition-all font-semibold uppercase tracking-widest text-sm disabled:opacity-50 mt-2 border-0 cursor-pointer hover:from-gold-dark hover:to-gold relative overflow-hidden group"
               >
-                {isJoining ? "Creating Account..." : "Create Account"}
+                <span className="relative z-10">{isJoining ? "Creating Account..." : "Create Account"}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-gold-dark to-gold-light opacity-0 group-hover:opacity-100 transition-opacity" />
               </motion.button>
             </div>
           </motion.div>

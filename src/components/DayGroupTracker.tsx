@@ -75,11 +75,11 @@ export function DayGroupTracker({
       {/* Group Stats Footer */}
       <div className="mt-4 pt-4 border-t border-gold border-opacity-20 flex items-center justify-between text-xs sm:text-sm">
         <div>
-          <p className="text-ink-light font-medium">Complete</p>
+          <p className="text-ink-light font-medium pl-3">Complete</p>
           <p className="font-bold text-gold">{stats.readersCompleteDay}/{readers.length}</p>
         </div>
         <div className="text-right">
-          <p className="text-ink-light font-medium">Average</p>
+          <p className="text-ink-light font-medium pl-3">Average</p>
           <p className="font-bold text-ink">{stats.completionPercent}%</p>
         </div>
       </div>

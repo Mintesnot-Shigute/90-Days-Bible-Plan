@@ -67,7 +67,7 @@ export function Header({
           <motion.div className="flex gap-4 sm:gap-6" whileHover={{ scale: 1.02 }}>
             {/* Progress */}
             <div className="flex flex-col">
-              <span className="text-ink-light text-caption uppercase tracking-wide font-medium">Progress</span>
+              <span className="text-ink-light text-caption uppercase tracking-wide font-medium pl-3">Progress</span>
               <span className="text-xl sm:text-2xl font-serif font-bold text-ink mt-1">{daysComplete}/90</span>
             </div>
 
@@ -88,7 +88,7 @@ export function Header({
             className="flex flex-col items-end"
             whileHover={{ scale: 1.05 }}
           >
-            <span className="text-ink-light text-caption uppercase tracking-wide font-medium">Group</span>
+            <span className="text-ink-light text-caption uppercase tracking-wide font-medium pl-3">Group</span>
             <span className="text-xl sm:text-2xl font-serif font-bold text-gold mt-1">{groupPercent}%</span>
           </motion.div>
         </motion.div>
