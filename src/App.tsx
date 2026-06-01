@@ -45,7 +45,7 @@ function App() {
 
       {menuOpen && (
         <div className="bg-white border-b-2 border-gold">
-          <div className="max-w-md mx-auto px-4 py-4">
+          <div className="max-w-md mx-auto px-5 py-4">
             <p className="text-sm text-gray-600 mb-3">Switch reader:</p>
             <div className="space-y-2 mb-4">
               {readers.map((reader) => (
@@ -75,7 +75,7 @@ function App() {
         </div>
       )}
 
-      <div className="max-w-md mx-auto px-3 sm:px-4 pt-4 sm:pt-6">
+      <div className="max-w-md mx-auto px-5 sm:px-6 pt-4 sm:pt-6">
         <div className="mb-6 pb-20">{tab === "today" && (
             <TodayTab
               currentReader={currentReader}
