@@ -47,21 +47,23 @@ export function Header({
         animate="visible"
         variants={containerVariants}
       >
-        {/* Reader name */}
+        {/* Reader name - Centered with menu on right */}
         <motion.div className="flex items-center justify-between mb-4" variants={itemVariants}>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink pl-2">{currentReader}</h1>
+          <div className="flex-1 text-center">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink">{currentReader}</h1>
+          </div>
           <motion.button
             onClick={onOpenMenu}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors ml-2"
+            className="p-2 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors flex-shrink-0 ml-2"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-ink" />
           </motion.button>
         </motion.div>
 
         {/* Stats row with better spacing */}
-        <motion.div className="flex items-center justify-between text-xs sm:text-sm gap-4 pl-2" variants={itemVariants}>
+        <motion.div className="flex items-center justify-between text-xs sm:text-sm gap-4" variants={itemVariants}>
           <motion.div className="flex gap-4 sm:gap-6" whileHover={{ scale: 1.02 }}>
             {/* Progress */}
             <div className="flex flex-col">

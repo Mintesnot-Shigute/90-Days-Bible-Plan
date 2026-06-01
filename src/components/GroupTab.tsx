@@ -46,29 +46,33 @@ export function GroupTab({
       {/* Leaderboard */}
 
       <div>
-        <h2 className="text-base sm:text-lg font-serif text-ink mb-3 sm:mb-4">Leaderboard</h2>
-        <div className="space-y-2">
+        <h2 className="text-base sm:text-lg font-serif text-ink text-center mb-4 sm:mb-5">Leaderboard</h2>
+        <div className="space-y-2.5">
           {leaderboard.map((entry, index) => {
             const isCurrentUser = entry.name === currentReader;
             return (
               <div
                 key={entry.name}
-                className={`p-3 sm:p-4 rounded-lg border-2 ${
+                className={`p-3.5 sm:p-4 rounded-xl border shadow-soft ${
                   isCurrentUser
-                    ? "bg-gold bg-opacity-5 border-gold"
-                    : "border-gray-300"
+                    ? "bg-gold bg-opacity-8 border-gold border-opacity-60"
+                    : "border-gray-200 hover:shadow-subtle transition-shadow"
                 }`}
               >
-                <div className="flex items-start gap-2 sm:gap-3">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className={`text-base sm:text-lg font-bold font-serif w-8 h-8 flex items-center justify-center rounded-lg ${
+                    isCurrentUser 
+                      ? "bg-gold bg-opacity-20 text-gold" 
+                      : "bg-gray-100 text-ink-light"
+                  }`}>
+                    {index + 1}
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-medium text-sm sm:text-base truncate ${isCurrentUser ? "text-gold" : "text-ink"}`}>
-                      {index + 1}. {entry.name}
+                    <p className={`font-semibold text-sm sm:text-base ${isCurrentUser ? "text-gold" : "text-ink"}`}>
+                      {entry.name}
                     </p>
-                    <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <p className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-                        {entry.daysComplete}/90
-                      </p>
-                      <div className="flex-1 min-w-[80px] h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
                           className="bg-gold h-full transition-all duration-500"
                           style={{
@@ -76,6 +80,9 @@ export function GroupTab({
                           }}
                         />
                       </div>
+                      <p className="text-xs sm:text-sm font-semibold text-ink-light whitespace-nowrap">
+                        {entry.daysComplete}/90
+                      </p>
                     </div>
                   </div>
                   {entry.streak > 0 && (

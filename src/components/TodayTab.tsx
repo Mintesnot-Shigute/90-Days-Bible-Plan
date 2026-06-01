@@ -266,7 +266,7 @@ export function TodayTab({
 
       {/* Readings Section */}
       <motion.div className="space-y-4" variants={itemVariants}>
-        <h3 className="text-sm font-semibold text-ink pl-2 uppercase tracking-wide">Readings for Today</h3>
+        <h3 className="text-sm font-semibold text-ink text-center uppercase tracking-wide">Readings for Today</h3>
         <motion.div 
           className="space-y-3"
           variants={containerVariants}

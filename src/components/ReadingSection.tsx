@@ -144,8 +144,7 @@ export function ReadingSection({
         initial="collapsed"
         animate={isExpanded ? "expanded" : "collapsed"}
         variants={expandVariants}
-        overflow="hidden"
-        className="mt-2"
+        className="mt-2 overflow-hidden"
       >
         {/* Bible content and verse */}
         {children && (
