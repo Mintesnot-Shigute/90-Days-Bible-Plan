@@ -1,17 +1,20 @@
 import { Reader, Progress } from "../types";
 import { getDayGroupStats } from "../lib/groupStats";
+import { getDayPercent } from "../lib/stats";
 import { useMemo } from "react";
 
 interface DayGroupTrackerProps {
   day: number;
   readers: Reader[];
   progress: Progress[];
+  currentReader?: string;
 }
 
 export function DayGroupTracker({
   day,
   readers,
   progress,
+  currentReader,
 }: DayGroupTrackerProps) {
   const stats = getDayGroupStats(day, readers, progress);
 
@@ -20,13 +23,14 @@ export function DayGroupTracker({
     return [...stats.readerStats].sort((a, b) => b.dayPercent - a.dayPercent);
   }, [stats.readerStats]);
 
-  // Check if any reader hasn't completed 100%
-  const hasIncompleteReaders = sortedReaders.some(reader => reader.dayPercent < 100);
+  // Check if the CURRENT user hasn't completed 100%
+  const currentReaderPercent = currentReader ? getDayPercent(currentReader, day, progress) : 100;
+  const shouldShowWarning = currentReaderPercent < 100;
 
   return (
     <div className="bg-gradient-to-r from-cream to-parchment rounded-xl p-4 sm:p-5 border border-gold border-opacity-30 shadow-soft space-y-4">
-      {/* Payment Reminder Warning - Only show if someone hasn't completed */}
-      {hasIncompleteReaders && (
+      {/* Payment Reminder Warning - Only show if current user hasn't completed */}
+      {shouldShowWarning && (
         <div className="bg-red-50 border border-red-300 rounded-lg p-3.5">
           <p className="text-sm font-bold text-red-700 mb-2">
             ⚠️ IMPORTANT: Complete your reading today!

@@ -249,7 +249,7 @@ export function TodayTab({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <DayGroupTracker day={selectedDay} readers={readers} progress={progress} />
+        <DayGroupTracker day={selectedDay} readers={readers} progress={progress} currentReader={currentReader} />
       </motion.div>
 
       {/* Readings Section */}
