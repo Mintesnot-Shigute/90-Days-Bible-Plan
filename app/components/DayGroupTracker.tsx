@@ -20,19 +20,24 @@ export function DayGroupTracker({
     return [...stats.readerStats].sort((a, b) => b.dayPercent - a.dayPercent);
   }, [stats.readerStats]);
 
+  // Check if any reader hasn't completed 100%
+  const hasIncompleteReaders = sortedReaders.some(reader => reader.dayPercent < 100);
+
   return (
     <div className="bg-gradient-to-r from-cream to-parchment rounded-xl p-4 sm:p-5 border border-gold border-opacity-30 shadow-soft space-y-4">
-      {/* Payment Reminder Warning */}
-      <div className="bg-red-50 border border-red-300 rounded-lg p-3.5">
-        <p className="text-sm font-bold text-red-700 mb-2">
-          ⚠️ IMPORTANT: Complete your reading today!
-        </p>
-        <div className="text-xs text-red-600 space-y-1">
-          <p className="font-semibold">50 Birr fine for missing a day</p>
-          <p className="font-semibold">COOP Account: 1071200005269</p>
-          <p>Name: Mihret Tsegaye Mamo</p>
+      {/* Payment Reminder Warning - Only show if someone hasn't completed */}
+      {hasIncompleteReaders && (
+        <div className="bg-red-50 border border-red-300 rounded-lg p-3.5">
+          <p className="text-sm font-bold text-red-700 mb-2">
+            ⚠️ IMPORTANT: Complete your reading today!
+          </p>
+          <div className="text-xs text-red-600 space-y-1">
+            <p className="font-semibold">50 Birr fine for missing a day</p>
+            <p className="font-semibold">COOP Account: 1071200005269</p>
+            <p>Name: Mihret Tsegaye Mamo</p>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Header */}
       <h3 className="text-sm font-semibold text-ink text-center uppercase tracking-wide mb-3">
