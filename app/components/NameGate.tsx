@@ -124,22 +124,33 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
             className="w-full mb-10 p-6 rounded-2xl"
             style={{ background: "rgba(255,255,255,0.6)", border: "1px solid rgba(184,134,11,0.15)", backdropFilter: "blur(10px)" }}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-4 h-4" style={{ color: "#b8860b" }} />
-              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "#a9926f" }}>Welcome back</span>
-            </div>
+            <div className="flex items-center justify-center gap-2 mb-4">
+            <Sparkles className="w-4 h-4" style={{ color: "#b8860b" }} />
+             <span
+              className="text-xs font-bold uppercase tracking-wider"
+              style={{ color: "#a9926f" }}
+                  >
+               Welcome back
+                </span>
+              </div>
             <div className="flex flex-col gap-2">
               {readers.map((reader) => (
                 <motion.button
-                  key={reader.name}
-                  onClick={() => onSelectReader(reader.name)}
-                  whileHover={{ x: 4 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full px-4 py-3 rounded-lg font-semibold transition-all text-left"
-                  style={{ background: "#fbf5e9", border: "1px solid rgba(184,134,11,0.15)", color: "#5a4423" }}
-                >
-                  {reader.name}
-                </motion.button>
+  key={reader.name}
+  onClick={() => onSelectReader(reader.name)}
+  whileHover={{ x: 4 }}
+  whileTap={{ scale: 0.98 }}
+  className="w-full px-4 py-3 rounded-lg font-bold text-xl transition-all text-center"
+  style={{
+    background: "#fbf5e9",
+    border: "6px solid rgba(184,134,11,0.15)",
+    color: "#5a4423",
+    fontSize: "20px",
+  }}
+
+>
+  {reader.name}
+</motion.button>
               ))}
             </div>
           </motion.div>
