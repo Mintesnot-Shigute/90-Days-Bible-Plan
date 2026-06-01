@@ -3,10 +3,12 @@
 import { useState, useCallback } from 'react';
 import { NameGate, Header, TodayTab, PlanTab, GroupTab, ReportTab } from './components';
 import { useReaders, useProgress, useCurrentReader } from './hooks';
+import { Calendar, Users, BarChart3, Home, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Tab = 'today' | 'plan' | 'group' | 'report';
 
-export default function Home() {
+export default function AppPage() {
   const [tab, setTab] = useState<Tab>('today');
   const [menuOpen, setMenuOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -35,8 +37,15 @@ export default function Home() {
     setTab('today');
   };
 
+  const tabs: Array<{ id: Tab; label: string; icon: any }> = [
+    { id: 'today', label: 'Today', icon: Home },
+    { id: 'plan', label: 'Plan', icon: Calendar },
+    { id: 'group', label: 'Group', icon: Users },
+    { id: 'report', label: 'Report', icon: BarChart3 },
+  ];
+
   return (
-    <div className="min-h-screen bg-parchment">
+    <div className="min-h-screen bg-gray-50">
       <Header
         currentReader={currentReader}
         readers={readers}
@@ -44,120 +53,159 @@ export default function Home() {
         onOpenMenu={() => setMenuOpen(!menuOpen)}
       />
 
-      {menuOpen && (
-        <div className="bg-white border-b-2 border-gold">
-          <div className="max-w-md mx-auto px-5 py-4">
-            <p className="text-sm text-gray-600 mb-3">Switch reader:</p>
-            <div className="space-y-2 mb-4">
-              {readers.map((reader) => (
+      {/* Reader Switch Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="bg-white border-b border-gray-200 shadow-md"
+          >
+            <div className="max-w-md mx-auto px-4 py-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-gray-900">Switch Reader</h3>
                 <button
-                  key={reader.name}
-                  onClick={() => handleSwitchReader(reader.name)}
-                  className={`w-full text-left px-4 py-2 rounded transition-colors ${
-                    reader.name === currentReader
-                      ? 'bg-gold text-white font-medium'
-                      : 'bg-gray-100 text-ink hover:bg-gray-200'
-                  }`}
+                  onClick={() => setMenuOpen(false)}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
                 >
-                  {reader.name}
+                  <X className="w-4 h-4 text-gray-500" />
                 </button>
-              ))}
+              </div>
+              <div className="space-y-2 mb-4">
+                {readers.map((reader) => (
+                  <motion.button
+                    key={reader.name}
+                    onClick={() => handleSwitchReader(reader.name)}
+                    whileHover={{ x: 4 }}
+                    className={`w-full text-left px-4 py-2.5 rounded-lg transition-all ${
+                      reader.name === currentReader
+                        ? 'bg-blue-600 text-white font-semibold'
+                        : 'bg-gray-50 text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    {reader.name}
+                  </motion.button>
+                ))}
+              </div>
+              <button
+                onClick={() => {
+                  setCurrentReader(null);
+                  setMenuOpen(false);
+                }}
+                className="w-full px-4 py-2.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-all text-sm font-semibold"
+              >
+                Sign Out
+              </button>
             </div>
-            <button
-              onClick={() => {
-                setCurrentReader(null);
-                setMenuOpen(false);
-              }}
-              className="w-full px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors text-sm"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="max-w-md mx-auto px-5 sm:px-6 pt-4 sm:pt-6">
-        <div className="mb-6 pb-20">
+      {/* Main Content */}
+      <div className="max-w-md mx-auto px-4 sm:px-6 pt-4 pb-24">
+        <AnimatePresence mode="wait">
           {tab === 'today' && (
-            <TodayTab
-              currentReader={currentReader}
-              readers={readers}
-              progress={progress}
-              onRefresh={handleRefresh}
-              key={refreshTrigger}
-            />
+            <motion.div
+              key="today"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <TodayTab
+                currentReader={currentReader}
+                readers={readers}
+                progress={progress}
+                onRefresh={handleRefresh}
+                key={refreshTrigger}
+              />
+            </motion.div>
           )}
           {tab === 'plan' && (
-            <PlanTab
-              currentReader={currentReader}
-              progress={progress}
-              onSelectDay={(day) => {
-                setTab('today');
-              }}
-            />
+            <motion.div
+              key="plan"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <PlanTab
+                currentReader={currentReader}
+                progress={progress}
+                onSelectDay={(day) => {
+                  setTab('today');
+                }}
+              />
+            </motion.div>
           )}
           {tab === 'group' && (
-            <GroupTab
-              currentReader={currentReader}
-              readers={readers}
-              progress={progress}
-            />
+            <motion.div
+              key="group"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <GroupTab
+                currentReader={currentReader}
+                readers={readers}
+                progress={progress}
+              />
+            </motion.div>
           )}
           {tab === 'report' && (
-            <ReportTab
-              readers={readers}
-              progress={progress}
-            />
+            <motion.div
+              key="report"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ReportTab readers={readers} progress={progress} />
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gold">
-        <div className="max-w-md mx-auto flex items-center justify-around text-sm sm:text-base">
-          <button
-            onClick={() => setTab('today')}
-            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
-              tab === 'today'
-                ? 'text-gold border-t-2 border-gold'
-                : 'text-ink hover:text-gold'
-            }`}
-          >
-            Today
-          </button>
-          <button
-            onClick={() => setTab('plan')}
-            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
-              tab === 'plan'
-                ? 'text-gold border-t-2 border-gold'
-                : 'text-ink hover:text-gold'
-            }`}
-          >
-            Plan
-          </button>
-          <button
-            onClick={() => setTab('group')}
-            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
-              tab === 'group'
-                ? 'text-gold border-t-2 border-gold'
-                : 'text-ink hover:text-gold'
-            }`}
-          >
-            Group
-          </button>
-          <button
-            onClick={() => setTab('report')}
-            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
-              tab === 'report'
-                ? 'text-gold border-t-2 border-gold'
-                : 'text-ink hover:text-gold'
-            }`}
-          >
-            Report
-          </button>
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+        <div className="max-w-md mx-auto flex items-center justify-around">
+          {tabs.map((t) => {
+            const Icon = t.icon;
+            const isActive = tab === t.id;
+            return (
+              <motion.button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                whileTap={{ scale: 0.95 }}
+                className={`flex-1 py-3 sm:py-4 transition-all flex flex-col items-center justify-center gap-1 min-h-[60px] ${
+                  isActive
+                    ? 'text-blue-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <motion.div
+                  animate={{ scale: isActive ? 1.1 : 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'fill-current' : ''}`} />
+                </motion.div>
+                <span className={`text-xs font-semibold ${isActive ? 'text-blue-600' : 'text-gray-600'}`}>
+                  {t.label}
+                </span>
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600"
+                    style={{ width: '100%' }}
+                  />
+                )}
+              </motion.button>
+            );
+          })}
         </div>
       </div>
-
-      <div className="h-24" />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Progress, Reader } from "../types";
 import { countCompleteDays, calculateStreak, calculateGroupPercent } from "../lib/stats";
-import { Flame, Menu } from "lucide-react";
+import { Flame, Menu, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface HeaderProps {
@@ -19,79 +19,86 @@ export function Header({
   const daysComplete = countCompleteDays(currentReader, progress);
   const streak = calculateStreak(currentReader, progress);
   const groupPercent = calculateGroupPercent(readers, progress);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.3 },
-    },
-  };
+  const progressPercent = Math.round((daysComplete / 90) * 100);
 
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-white bg-opacity-80 border-b border-gold border-opacity-20 shadow-soft">
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
       <motion.div
-        className="max-w-md mx-auto px-5 sm:px-6 py-4 sm:py-5"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
+        className="max-w-md mx-auto px-4 sm:px-6 py-4"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
       >
-        {/* Reader name - Centered with menu on LEFT */}
-        <motion.div className="flex items-center justify-between mb-4" variants={itemVariants}>
+        {/* Top row: Menu + Reader name */}
+        <div className="flex items-center justify-between mb-5">
           <motion.button
             onClick={onOpenMenu}
-            whileHover={{ scale: 1.08 }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors flex-shrink-0 mr-2"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-ink" />
+            <Menu className="w-5 h-5 text-gray-700" />
           </motion.button>
-          <div className="flex-1 text-center">
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink">{currentReader}</h1>
-          </div>
-        </motion.div>
+          <h1 className="text-xl font-bold text-gray-900 flex-1 text-center">{currentReader}</h1>
+          <div className="w-9" /> {/* Balance the menu button */}
+        </div>
 
-        {/* Stats row with better spacing */}
-        <motion.div className="flex items-center justify-between text-xs sm:text-sm gap-4" variants={itemVariants}>
-          <motion.div className="flex gap-4 sm:gap-6" whileHover={{ scale: 1.02 }}>
-            {/* Progress */}
-            <div className="flex flex-col">
-              <span className="text-ink-light text-caption uppercase tracking-wide font-medium pl-3">Progress</span>
-              <span className="text-xl sm:text-2xl font-serif font-bold text-ink mt-1">{daysComplete}/90</span>
-            </div>
+        {/* Stats cards row */}
+        <div className="grid grid-cols-3 gap-3">
+          {/* Progress Card */}
+          <motion.div
+            className="card-subtle p-3 text-center"
+            whileHover={{ scale: 1.02 }}
+          >
+            <p className="text-muted mb-1.5">Progress</p>
+            <p className="text-2xl font-bold text-blue-600">{daysComplete}</p>
+            <p className="text-xs text-gray-500">of 90</p>
+          </motion.div>
 
-            {/* Streak */}
-            {streak > 0 && (
-              <div className="flex items-start gap-2">
-                <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-gold flex-shrink-0 mt-0.5 animate-pulse-gentle" />
-                <div className="flex flex-col">
-                  <span className="text-ink-light text-caption uppercase tracking-wide font-medium">Streak</span>
-                  <span className="text-xl sm:text-2xl font-serif font-bold text-gold mt-1">{streak}</span>
+          {/* Streak Card */}
+          <motion.div
+            className="card-subtle p-3 text-center"
+            whileHover={{ scale: 1.02 }}
+          >
+            {streak > 0 ? (
+              <>
+                <div className="flex justify-center mb-1.5">
+                  <Flame className="w-4 h-4 text-red-500 animate-pulse" />
                 </div>
-              </div>
+                <p className="text-2xl font-bold text-red-500">{streak}</p>
+                <p className="text-xs text-gray-500">day streak</p>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-center mb-1.5">
+                  <TrendingUp className="w-4 h-4 text-gray-400" />
+                </div>
+                <p className="text-2xl font-bold text-gray-400">0</p>
+                <p className="text-xs text-gray-500">start streak</p>
+              </>
             )}
           </motion.div>
 
-          {/* Group percentage */}
-          <motion.div 
-            className="flex flex-col items-end"
-            whileHover={{ scale: 1.05 }}
+          {/* Group Card */}
+          <motion.div
+            className="card-subtle p-3 text-center"
+            whileHover={{ scale: 1.02 }}
           >
-            <span className="text-ink-light text-caption uppercase tracking-wide font-medium pl-3">Group</span>
-            <span className="text-xl sm:text-2xl font-serif font-bold text-gold mt-1">{groupPercent}%</span>
+            <p className="text-muted mb-1.5">Group</p>
+            <p className="text-2xl font-bold text-blue-600">{groupPercent}%</p>
+            <p className="text-xs text-gray-500">average</p>
           </motion.div>
-        </motion.div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="mt-4 bg-gray-100 rounded-full h-2 overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-blue-500 to-indigo-600"
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPercent}%` }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
+        </div>
       </motion.div>
     </header>
   );

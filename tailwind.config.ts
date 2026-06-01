@@ -1,12 +1,30 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+import type { Config } from 'tailwindcss'
+import defaultTheme from 'tailwindcss/defaultTheme'
+
+const config: Config = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Inter"', 'sans-serif'],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+      },
+      colors: {
+        'ink': '#1a1a1a',
+        'ink-light': '#666666',
+        'parchment': '#f9f6f3',
+        'cream': '#f5f1ed',
+        'gold': '#b8860b',
+        'gold-light': '#d4a574',
+        'gold-dark': '#8a6708',
+      },
+      boxShadow: {
+        'soft': '0 2px 4px rgba(0, 0, 0, 0.05)',
+        'subtle': '0 1px 2px rgba(0, 0, 0, 0.05)',
+        'elevation': '0 4px 12px rgba(0, 0, 0, 0.15)',
+        'glow': '0 0 12px rgba(184, 134, 11, 0.4)',
+        'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
       },
     },
   },
@@ -66,3 +84,4 @@ export default {
   ],
 }
 
+export default config

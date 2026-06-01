@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { Reader, Progress } from "../types";
 import { countCompleteDays, calculateStreak, calculateGroupPercent } from "../lib/stats";
-import { Flame, TrendingUp } from "lucide-react";
+import { Flame, Medal } from "lucide-react";
+import { motion } from "framer-motion";
 import { GroupProgressHero } from "./GroupProgressHero";
 import { CalendarHeatmap } from "./CalendarHeatmap";
 
@@ -36,79 +37,129 @@ export function GroupTab({
       });
   }, [readers, progress]);
 
+  const getMedalColor = (index: number) => {
+    if (index === 0) return 'from-yellow-400 to-yellow-600';
+    if (index === 1) return 'from-gray-300 to-gray-500';
+    if (index === 2) return 'from-orange-300 to-orange-600';
+    return '';
+  };
+
+  const getMedalIcon = (index: number) => {
+    if (index < 3) return <Medal className="w-4 h-4" />;
+    return `#${index + 1}`;
+  };
+
   return (
-    <div className="pb-8 px-5 sm:px-6 max-w-md mx-auto space-y-6">
+    <div className="space-y-6">
       {/* Progress Hero */}
-      <div className="pt-6">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <GroupProgressHero readers={readers} progress={progress} />
-      </div>
+      </motion.div>
 
       {/* Leaderboard */}
-
-      <div>
-        <h2 className="text-base sm:text-lg font-serif text-ink text-center mb-4 sm:mb-5">Leaderboard</h2>
-        <div className="space-y-2.5">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <div className="mb-4">
+          <h2 className="text-h2 text-gray-900">Leaderboard</h2>
+          <p className="text-body text-gray-600">Group rankings</p>
+        </div>
+        <div className="space-y-3">
           {leaderboard.map((entry, index) => {
             const isCurrentUser = entry.name === currentReader;
             return (
-              <div
+              <motion.div
                 key={entry.name}
-                className={`p-3.5 sm:p-4 rounded-xl border shadow-soft ${
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.15 + index * 0.05 }}
+                className={`card p-4 border-2 transition-all ${
                   isCurrentUser
-                    ? "bg-gold bg-opacity-8 border-gold border-opacity-60"
-                    : "border-gray-200 hover:shadow-subtle transition-shadow"
+                    ? 'border-blue-400 bg-blue-50'
+                    : 'border-gray-200'
                 }`}
               >
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <div className={`text-base sm:text-lg font-bold font-serif w-8 h-8 flex items-center justify-center rounded-lg ${
-                    isCurrentUser 
-                      ? "bg-gold bg-opacity-20 text-gold" 
-                      : "bg-gray-100 text-ink-light"
-                  }`}>
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-semibold text-sm sm:text-base ${isCurrentUser ? "text-gold" : "text-ink"}`}>
-                      {entry.name}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className="bg-gold h-full transition-all duration-500"
-                          style={{
-                            width: `${(entry.daysComplete / 90) * 100}%`,
-                          }}
-                        />
-                      </div>
-                      <p className="text-xs sm:text-sm font-semibold text-ink-light whitespace-nowrap">
-                        {entry.daysComplete}/90
-                      </p>
-                    </div>
-                  </div>
-                  {entry.streak > 0 && (
-                    <div className="flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
-                      <Flame className="w-4 h-4 text-gold" />
-                      <span className="text-sm font-bold text-gold">
-                        {entry.streak}
-                      </span>
+                <div className="flex items-center gap-4">
+                  {/* Rank Badge */}
+                  {index < 3 ? (
+                    <motion.div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold shadow-lg bg-gradient-to-br ${getMedalColor(index)}`}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.2 + index * 0.05 }}
+                    >
+                      {getMedalIcon(index)}
+                    </motion.div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-gray-600 bg-gray-100">
+                      {index + 1}
                     </div>
                   )}
+
+                  {/* User Info */}
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-semibold text-gray-900 ${isCurrentUser ? 'text-blue-600' : ''}`}>
+                      {entry.name}
+                    </p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-blue-500 to-indigo-600"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(entry.daysComplete / 90) * 100}%` }}
+                          transition={{ duration: 0.8, delay: 0.2 }}
+                        />
+                      </div>
+                      <span className="text-xs font-semibold text-gray-600 whitespace-nowrap">
+                        {entry.daysComplete}/90
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Streak */}
+                  {entry.streak > 0 && (
+                    <motion.div
+                      className="flex items-center gap-1.5 whitespace-nowrap"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                    >
+                      <Flame className="w-4 h-4 text-red-500 animate-pulse" />
+                      <span className="font-bold text-red-600">{entry.streak}</span>
+                    </motion.div>
+                  )}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* Individual Heatmaps */}
-      <div className="border-t pt-6">
-        <h3 className="text-base sm:text-lg font-serif text-ink mb-4">Individual Heatmaps</h3>
-        <div className="space-y-6">
-          {leaderboard.map((entry) => (
-            <CalendarHeatmap key={entry.name} reader={entry.name} progress={progress} />
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="border-t border-gray-200 pt-6"
+      >
+        <h3 className="text-h3 text-gray-900 mb-4">Activity Heatmaps</h3>
+        <div className="space-y-4">
+          {leaderboard.map((entry, idx) => (
+            <motion.div
+              key={entry.name}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.35 + idx * 0.1 }}
+            >
+              <CalendarHeatmap key={entry.name} reader={entry.name} progress={progress} />
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

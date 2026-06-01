@@ -1,7 +1,9 @@
 import { useMemo } from "react";
-import { Progress, Reader } from "../types";
+import { Progress } from "../types";
 import { isDayComplete, getDayPercent } from "../lib/stats";
 import { getDayDate, formatDateShort } from "../lib/dates";
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 
 interface PlanTabProps {
   currentReader: string;
@@ -31,59 +33,87 @@ export function PlanTab({
     return data;
   }, [progress, currentReader]);
 
-  const getGradientId = (day: number) => `grad-${day}`;
-
   return (
-    <div className="pb-8 px-5 sm:px-6 max-w-md mx-auto">
-      <h2 className="text-2xl sm:text-3xl font-serif text-ink mb-6 pt-6">90-Day Plan</h2>
-      <div className="grid grid-cols-6 sm:grid-cols-9 md:grid-cols-10 gap-2">
-        {gridData.map((item) => (
-          <button
-            key={item.day}
-            onClick={() => onSelectDay(item.day)}
-            title={`Day ${item.day} - ${formatDateShort(getDayDate(item.day))}`}
-            className="aspect-square rounded-lg border-2 border-gray-300 hover:border-gold transition-all relative overflow-hidden group"
-          >
-            {item.complete ? (
-              <div className="w-full h-full bg-gold flex items-center justify-center">
-                <span className="text-white text-xs sm:text-sm font-bold">
-                  {item.day}
-                </span>
-              </div>
-            ) : (
-              <>
-                <svg className="w-full h-full absolute inset-0">
-                  <defs>
-                    <linearGradient
-                      id={getGradientId(item.day)}
-                      x1="0%"
-                      y1="100%"
-                      x2="0%"
-                      y2={`${100 - item.percentage}%`}
-                    >
-                      <stop offset="0%" stopColor="#b8860b" />
-                      <stop offset="100%" stopColor="transparent" />
-                    </linearGradient>
-                  </defs>
-                  <rect
-                    width="100%"
-                    height="100%"
-                    fill={`url(#${getGradientId(item.day)})`}
-                  />
-                </svg>
-                <div className="relative h-full flex items-center justify-center">
-                  <span className="text-xs sm:text-sm font-bold text-ink group-hover:text-gold">
-                    {item.day}
-                  </span>
-                </div>
-              </>
-            )}
-          </button>
-        ))}
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-h2 text-gray-900 mb-2">90-Day Plan</h2>
+        <p className="text-body text-gray-600">Your complete reading schedule</p>
       </div>
-      <p className="text-sm text-gray-600 mt-4">
-        Tap a day to jump to it. Filled days are complete.
-      </p>
+
+      <motion.div 
+        className="card p-6"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="grid grid-cols-10 gap-1.5 sm:gap-2">
+          {gridData.map((item, idx) => (
+            <motion.button
+              key={item.day}
+              onClick={() => onSelectDay(item.day)}
+              title={`Day ${item.day} - ${formatDateShort(getDayDate(item.day))}`}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.02 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="aspect-square rounded-lg border transition-all font-semibold text-xs relative overflow-hidden group"
+              style={{
+                background: item.complete
+                  ? 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)'
+                  : `linear-gradient(180deg, #3b82f6 0%, #eff6ff ${Math.max(0, 100 - item.percentage)}%, #f3f4f6 ${Math.max(0, 100 - item.percentage)}%, #f3f4f6 100%)`,
+                borderColor: item.complete ? '#1d4ed8' : '#e5e7eb',
+                color: item.complete ? 'white' : '#1f2937',
+              }}
+            >
+              <span className="relative z-10 flex items-center justify-center h-full">
+                {item.complete ? (
+                  <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+                ) : (
+                  item.day
+                )}
+              </span>
+            </motion.button>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div 
+        className="card p-4 bg-blue-50 border border-blue-200"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <p className="text-sm text-blue-900">
+          <span className="font-semibold">Legend:</span> Tap any day to jump to it. Filled days are complete.
+        </p>
+      </motion.div>
+
+      {/* Summary Stats */}
+      <motion.div 
+        className="grid grid-cols-3 gap-3"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <div className="card p-4 text-center">
+          <p className="text-muted mb-2">Completed</p>
+          <p className="text-2xl font-bold text-blue-600">
+            {gridData.filter(d => d.complete).length}
+          </p>
+        </div>
+        <div className="card p-4 text-center">
+          <p className="text-muted mb-2">In Progress</p>
+          <p className="text-2xl font-bold text-amber-600">
+            {gridData.filter(d => !d.complete && d.percentage > 0).length}
+          </p>
+        </div>
+        <div className="card p-4 text-center">
+          <p className="text-muted mb-2">Not Started</p>
+          <p className="text-2xl font-bold text-gray-600">
+            {gridData.filter(d => d.percentage === 0).length}
+          </p>
+        </div>
+      </motion.div>
     </div>
   );
 }
