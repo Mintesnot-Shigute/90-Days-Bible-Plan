@@ -1,6 +1,6 @@
 import { Reader, Progress } from "../types";
 import { getDayGroupStats } from "../lib/groupStats";
-import { CheckCircle2, Circle } from "lucide-react";
+import { useMemo } from "react";
 
 interface DayGroupTrackerProps {
   day: number;
@@ -15,57 +15,73 @@ export function DayGroupTracker({
 }: DayGroupTrackerProps) {
   const stats = getDayGroupStats(day, readers, progress);
 
+  // Sort readers by dayPercent descending (highest achievement first)
+  const sortedReaders = useMemo(() => {
+    return [...stats.readerStats].sort((a, b) => b.dayPercent - a.dayPercent);
+  }, [stats.readerStats]);
+
   return (
-    <div className="bg-gradient-to-r from-cream to-parchment rounded-lg p-4 border-2 border-gold border-opacity-30">
-      {/* Summary Stats */}
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <p className="text-xs sm:text-sm font-medium text-gray-600">Day {day} Group</p>
-          <p className="text-xl sm:text-2xl font-bold text-gold">
-            {stats.readersCompleteDay}/{readers.length} complete
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-xs sm:text-sm text-gray-600">Average</p>
-          <p className="text-xl sm:text-2xl font-bold text-ink">{stats.completionPercent}%</p>
-        </div>
-      </div>
+    <div className="bg-gradient-to-r from-cream to-parchment rounded-xl p-4 sm:p-5 border border-gold border-opacity-30 shadow-soft">
+      {/* Header */}
+      <h3 className="text-sm font-semibold text-ink text-center uppercase tracking-wide mb-4">
+        Day {day} Group Ranking
+      </h3>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-        <div
-          className="bg-gold h-full rounded-full transition-all duration-500"
-          style={{ width: `${stats.completionPercent}%` }}
-        />
-      </div>
-
-      {/* Reader List */}
-      <div className="space-y-2">
-        {stats.readerStats.map((reader) => (
-          <div key={reader.name} className="flex items-center justify-between text-xs sm:text-sm">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              {reader.dayCompleted ? (
-                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-gold flex-shrink-0" />
-              ) : (
-                <Circle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300 flex-shrink-0" />
-              )}
-              <span className={`truncate font-medium ${reader.dayCompleted ? "text-ink" : "text-gray-600"}`}>
-                {reader.name}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="bg-gold h-full transition-all duration-300"
-                  style={{ width: `${reader.dayPercent}%` }}
-                />
+      {/* Ranked Reader List */}
+      <div className="space-y-2.5">
+        {sortedReaders.map((reader, index) => (
+          <div
+            key={reader.name}
+            className={`p-3 sm:p-3.5 rounded-lg border transition-all ${
+              reader.dayCompleted
+                ? "bg-gold bg-opacity-8 border-gold border-opacity-50"
+                : "bg-white bg-opacity-40 border-gray-200"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              {/* Rank Badge */}
+              <div
+                className={`text-base sm:text-lg font-bold font-serif w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 ${
+                  reader.dayCompleted
+                    ? "bg-gold bg-opacity-25 text-gold"
+                    : "bg-gray-200 text-ink-light"
+                }`}
+              >
+                {index + 1}
               </div>
-              <span className="text-xs text-gray-600 min-w-[30px] text-right font-semibold">
-                {reader.dayPercent}%
-              </span>
+
+              {/* Name and Progress */}
+              <div className="flex-1 min-w-0">
+                <p className={`font-semibold text-sm truncate ${reader.dayCompleted ? "text-ink" : "text-gray-700"}`}>
+                  {reader.name}
+                </p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="bg-gold h-full transition-all duration-300"
+                      style={{ width: `${reader.dayPercent}%` }}
+                    />
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-ink-light whitespace-nowrap">
+                    {reader.dayPercent}%
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Group Stats Footer */}
+      <div className="mt-4 pt-4 border-t border-gold border-opacity-20 flex items-center justify-between text-xs sm:text-sm">
+        <div>
+          <p className="text-ink-light font-medium">Complete</p>
+          <p className="font-bold text-gold">{stats.readersCompleteDay}/{readers.length}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-ink-light font-medium">Average</p>
+          <p className="font-bold text-ink">{stats.completionPercent}%</p>
+        </div>
       </div>
     </div>
   );
