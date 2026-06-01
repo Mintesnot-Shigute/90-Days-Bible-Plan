@@ -38,35 +38,50 @@ export function DayGroupTracker({
                 : "bg-white bg-opacity-40 border-gray-200"
             }`}
           >
-            <div className="flex items-center gap-3">
-              {/* Rank Badge */}
-              <div
-                className={`text-base sm:text-lg font-bold font-serif w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 ${
-                  reader.dayCompleted
-                    ? "bg-gold bg-opacity-25 text-gold"
-                    : "bg-gray-200 text-ink-light"
-                }`}
-              >
-                {index + 1}
-              </div>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                {/* Rank Badge */}
+                <div
+                  className={`text-base sm:text-lg font-bold font-serif w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 ${
+                    reader.dayCompleted
+                      ? "bg-gold bg-opacity-25 text-gold"
+                      : "bg-gray-200 text-ink-light"
+                  }`}
+                >
+                  {index + 1}
+                </div>
 
-              {/* Name and Progress */}
-              <div className="flex-1 min-w-0">
-                <p className={`font-semibold text-sm truncate ${reader.dayCompleted ? "text-ink" : "text-gray-700"}`}>
-                  {reader.name}
-                </p>
-                <div className="flex items-center gap-2 mt-1.5">
-                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="bg-gold h-full transition-all duration-300"
-                      style={{ width: `${reader.dayPercent}%` }}
-                    />
+                {/* Name and Progress */}
+                <div className="flex-1 min-w-0">
+                  <p className={`font-semibold text-sm truncate ${reader.dayCompleted ? "text-ink" : "text-gray-700"}`}>
+                    {reader.name}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="bg-gold h-full transition-all duration-300"
+                        style={{ width: `${reader.dayPercent}%` }}
+                      />
+                    </div>
+                    <span className="text-xs sm:text-sm font-bold text-ink-light whitespace-nowrap">
+                      {reader.dayPercent}%
+                    </span>
                   </div>
-                  <span className="text-xs sm:text-sm font-bold text-ink-light whitespace-nowrap">
-                    {reader.dayPercent}%
-                  </span>
                 </div>
               </div>
+
+              {/* Payment Reminder for Incomplete Days */}
+              {reader.dayPercent < 100 && (
+                <div className="ml-11 p-2.5 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-xs text-red-700 font-medium mb-1.5">
+                    💰 Finish reading to avoid 50 Br fine
+                  </p>
+                  <div className="text-xs text-red-600 space-y-0.5">
+                    <p className="font-semibold">COOP Account: 1071200005269</p>
+                    <p>Name: Mihret Tsegaye Mamo</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}
