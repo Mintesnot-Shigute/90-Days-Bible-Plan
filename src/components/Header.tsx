@@ -23,7 +23,7 @@ export function Header({
     <header className="bg-white border-b-2 border-gold sticky top-0 z-40">
       <div className="max-w-md mx-auto px-5 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-lg sm:text-2xl font-serif text-ink truncate">{currentReader}</h1>
+          <h1 className="text-lg sm:text-2xl font-serif text-ink truncate px-1">{currentReader}</h1>
           <button
             onClick={onOpenMenu}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 ml-2"
@@ -31,7 +31,7 @@ export function Header({
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-ink" />
           </button>
         </div>
-        <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
+        <div className="flex items-center justify-between text-xs sm:text-sm gap-2 px-1">
           <div className="flex gap-2 sm:gap-4">
             <div className="min-w-max">
               <p className="text-gray-600">Progress</p>
