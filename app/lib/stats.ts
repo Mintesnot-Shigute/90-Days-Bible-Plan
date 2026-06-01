@@ -1,4 +1,5 @@
 import { Progress, Reader } from "../types";
+import { getTodaysDayNumber } from "./dates";
 
 export function getReaderProgress(
   readerName: string,
@@ -105,3 +106,25 @@ export function getReaderStats(
     percent: Math.round((daysComplete / 90) * 100),
   };
 }
+
+/**
+ * Calculate fine in birr for missed days (50 birr per missed day)
+ * A day is considered missed if it has passed (before today) and is not complete
+ */
+export function calculateFine(
+  readerName: string,
+  progress: Progress[]
+): number {
+  const todaysDayNumber = getTodaysDayNumber();
+  let missedDays = 0;
+
+  // Count missed days: any day that has passed and is not complete
+  for (let day = 1; day < todaysDayNumber; day++) {
+    if (!isDayComplete(readerName, day, progress)) {
+      missedDays++;
+    }
+  }
+
+  return missedDays * 50; // 50 birr per missed day
+}
+

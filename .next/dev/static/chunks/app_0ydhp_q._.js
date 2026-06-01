@@ -335,7 +335,7 @@ function NameGate({ readers, onSelectReader, loading }) {
                         },
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex items-center gap-2 mb-4",
+                                className: "flex items-center justify-center gap-2 mb-4",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
                                         className: "w-4 h-4",
@@ -345,7 +345,7 @@ function NameGate({ readers, onSelectReader, loading }) {
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NameGate.tsx",
                                         lineNumber: 128,
-                                        columnNumber: 15
+                                        columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         className: "text-xs font-bold uppercase tracking-wider",
@@ -356,7 +356,7 @@ function NameGate({ readers, onSelectReader, loading }) {
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NameGate.tsx",
                                         lineNumber: 129,
-                                        columnNumber: 15
+                                        columnNumber: 14
                                     }, this)
                                 ]
                             }, void 0, true, {
@@ -374,21 +374,22 @@ function NameGate({ readers, onSelectReader, loading }) {
                                         whileTap: {
                                             scale: 0.98
                                         },
-                                        className: "w-full px-4 py-3 rounded-lg font-semibold transition-all text-left",
+                                        className: "w-full px-4 py-3 rounded-lg font-bold text-xl transition-all text-center",
                                         style: {
                                             background: "#fbf5e9",
-                                            border: "1px solid rgba(184,134,11,0.15)",
-                                            color: "#5a4423"
+                                            border: "6px solid rgba(184,134,11,0.15)",
+                                            color: "#5a4423",
+                                            fontSize: "20px"
                                         },
                                         children: reader.name
                                     }, reader.name, false, {
                                         fileName: "[project]/app/components/NameGate.tsx",
-                                        lineNumber: 133,
+                                        lineNumber: 138,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NameGate.tsx",
-                                lineNumber: 131,
+                                lineNumber: 136,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -407,7 +408,7 @@ function NameGate({ readers, onSelectReader, loading }) {
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NameGate.tsx",
-                                lineNumber: 151,
+                                lineNumber: 162,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -418,7 +419,7 @@ function NameGate({ readers, onSelectReader, loading }) {
                                 children: "or"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NameGate.tsx",
-                                lineNumber: 152,
+                                lineNumber: 163,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -428,13 +429,13 @@ function NameGate({ readers, onSelectReader, loading }) {
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NameGate.tsx",
-                                lineNumber: 153,
+                                lineNumber: 164,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/NameGate.tsx",
-                        lineNumber: 150,
+                        lineNumber: 161,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -465,7 +466,7 @@ function NameGate({ readers, onSelectReader, loading }) {
                                 children: "Begin Your Journey"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NameGate.tsx",
-                                lineNumber: 165,
+                                lineNumber: 176,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -476,12 +477,16 @@ function NameGate({ readers, onSelectReader, loading }) {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block text-sm font-semibold mb-2.5",
                                                 style: {
-                                                    color: "#8a7456"
+                                                    color: "#8a7456",
+                                                    fontSize: "20px",
+                                                    paddingTop: "10px",
+                                                    paddingBottom: "10px",
+                                                    textAlign: "center"
                                                 },
                                                 children: "Your name"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/NameGate.tsx",
-                                                lineNumber: 170,
+                                                lineNumber: 181,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -500,18 +505,22 @@ function NameGate({ readers, onSelectReader, loading }) {
                                                 style: {
                                                     background: "#fbf5e9",
                                                     color: "#3a2a18",
+                                                    fontSize: "24px",
+                                                    textAlign: "center",
+                                                    paddingTop: "10px",
+                                                    paddingBottom: "10px",
                                                     border: focused ? "2px solid #b8860b" : "1.5px solid #e2d3b6",
                                                     boxShadow: focused ? "0 0 0 3px rgba(184,134,11,0.1)" : "none"
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/NameGate.tsx",
-                                                lineNumber: 171,
+                                                lineNumber: 189,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/NameGate.tsx",
-                                        lineNumber: 169,
+                                        lineNumber: 180,
                                         columnNumber: 13
                                     }, this),
                                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -536,12 +545,12 @@ function NameGate({ readers, onSelectReader, loading }) {
                                             children: error
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/NameGate.tsx",
-                                            lineNumber: 200,
+                                            lineNumber: 223,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NameGate.tsx",
-                                        lineNumber: 194,
+                                        lineNumber: 217,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].button, {
@@ -557,7 +566,10 @@ function NameGate({ readers, onSelectReader, loading }) {
                                         className: "w-full py-3.5 rounded-lg text-white font-bold text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6",
                                         style: {
                                             background: "linear-gradient(135deg, #d4af37 0%, #b8860b 100%)",
-                                            boxShadow: "0 10px 24px -6px rgba(184,134,11,0.5)"
+                                            boxShadow: "0 10px 24px -6px rgba(0, 0, 0, 0.5)",
+                                            paddingTop: "10px",
+                                            paddingBottom: "10px",
+                                            color: "#000000"
                                         },
                                         children: isJoining ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                             children: [
@@ -565,7 +577,7 @@ function NameGate({ readers, onSelectReader, loading }) {
                                                     className: "w-4 h-4 animate-spin"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/NameGate.tsx",
-                                                    lineNumber: 217,
+                                                    lineNumber: 241,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Creating account…"
@@ -574,40 +586,40 @@ function NameGate({ readers, onSelectReader, loading }) {
                                             children: [
                                                 "Begin the journey",
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$right$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowRight$3e$__["ArrowRight"], {
-                                                    className: "w-4 h-4"
+                                                    className: "w-4 h-4 text-black font-bold"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/NameGate.tsx",
-                                                    lineNumber: 223,
+                                                    lineNumber: 247,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NameGate.tsx",
-                                        lineNumber: 204,
+                                        lineNumber: 227,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/NameGate.tsx",
-                                lineNumber: 168,
+                                lineNumber: 179,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/NameGate.tsx",
-                        lineNumber: 158,
+                        lineNumber: 169,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         className: "text-center text-sm font-medium mt-8",
                         style: {
-                            color: "#b3a081"
+                            color: "#070400"
                         },
                         children: "✨ Begin your 90-day spiritual transformation"
                     }, void 0, false, {
                         fileName: "[project]/app/components/NameGate.tsx",
-                        lineNumber: 231,
+                        lineNumber: 255,
                         columnNumber: 9
                     }, this)
                 ]

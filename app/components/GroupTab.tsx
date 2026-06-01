@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Reader, Progress } from "../types";
-import { countCompleteDays, calculateStreak, calculateGroupPercent } from "../lib/stats";
-import { Flame, Medal } from "lucide-react";
+import { countCompleteDays, calculateStreak, calculateGroupPercent, calculateFine } from "../lib/stats";
+import { Flame, Medal, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { GroupProgressHero } from "./GroupProgressHero";
 import { CalendarHeatmap } from "./CalendarHeatmap";
@@ -28,6 +28,7 @@ export function GroupTab({
         name: reader.name,
         daysComplete: countCompleteDays(reader.name, progress),
         streak: calculateStreak(reader.name, progress),
+        fine: calculateFine(reader.name, progress),
       }))
       .sort((a, b) => {
         if (b.daysComplete !== a.daysComplete) {
@@ -49,6 +50,12 @@ export function GroupTab({
     return `#${index + 1}`;
   };
 
+  const totalGroupFines = useMemo(() => {
+    return readers.reduce((sum, reader) => {
+      return sum + calculateFine(reader.name, progress);
+    }, 0);
+  }, [readers, progress]);
+
   return (
     <div className="space-y-6">
       {/* Progress Hero */}
@@ -58,6 +65,30 @@ export function GroupTab({
       >
         <GroupProgressHero readers={readers} progress={progress} />
       </motion.div>
+
+      {/* Fines Summary */}
+      {totalGroupFines > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="card p-4 border-l-4 border-red-500 bg-red-50"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-6 h-6 text-red-600" />
+              <div>
+                <p className="text-sm font-semibold text-red-900">Group Fines</p>
+                <p className="text-xs text-red-700">50 Br per missed day</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-red-700">{totalGroupFines} Br</p>
+              <p className="text-xs text-red-600">{Math.round(totalGroupFines / 50)} days missed</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       {/* Leaderboard */}
       <motion.div
@@ -120,6 +151,18 @@ export function GroupTab({
                       </span>
                     </div>
                   </div>
+
+                  {/* Fine Warning */}
+                  {entry.fine > 0 && (
+                    <motion.div
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-50 border border-red-200 whitespace-nowrap"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                    >
+                      <AlertCircle className="w-4 h-4 text-red-600" />
+                      <span className="text-xs font-bold text-red-700">{entry.fine}Br</span>
+                    </motion.div>
+                  )}
 
                   {/* Streak */}
                   {entry.streak > 0 && (
