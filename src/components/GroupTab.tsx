@@ -37,7 +37,7 @@ export function GroupTab({
   }, [readers, progress]);
 
   return (
-    <div className="pb-8 px-5 sm:px-4 max-w-md mx-auto space-y-6">
+    <div className="pb-8 px-5 sm:px-6 max-w-md mx-auto space-y-6">
       {/* Progress Hero */}
       <div className="pt-6">
         <GroupProgressHero readers={readers} progress={progress} />

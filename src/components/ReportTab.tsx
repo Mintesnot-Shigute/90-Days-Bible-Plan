@@ -34,7 +34,7 @@ export function ReportTab({ readers, progress }: ReportTabProps) {
   }, [readers, progress]);
 
   return (
-    <div className="pb-8 px-5 sm:px-4 max-w-md mx-auto space-y-6">
+    <div className="pb-8 px-5 sm:px-6 max-w-md mx-auto space-y-6">
       {/* Header */}
       <div className="pt-6">
         <h1 className="text-2xl sm:text-3xl font-serif text-ink">Completion Report</h1>

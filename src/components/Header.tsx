@@ -21,7 +21,7 @@ export function Header({
 
   return (
     <header className="bg-white border-b-2 border-gold sticky top-0 z-40">
-      <div className="max-w-md mx-auto px-3 sm:px-4 py-3 sm:py-4">
+      <div className="max-w-md mx-auto px-5 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-lg sm:text-2xl font-serif text-ink truncate">{currentReader}</h1>
           <button

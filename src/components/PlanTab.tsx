@@ -34,7 +34,7 @@ export function PlanTab({
   const getGradientId = (day: number) => `grad-${day}`;
 
   return (
-    <div className="pb-8 px-5 sm:px-4 max-w-md mx-auto">
+    <div className="pb-8 px-5 sm:px-6 max-w-md mx-auto">
       <h2 className="text-2xl sm:text-3xl font-serif text-ink mb-6 pt-6">90-Day Plan</h2>
       <div className="grid grid-cols-6 sm:grid-cols-9 md:grid-cols-10 gap-2">
         {gridData.map((item) => (

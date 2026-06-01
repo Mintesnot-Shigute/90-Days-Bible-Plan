@@ -111,7 +111,7 @@ export function TodayTab({
   };
 
   return (
-    <div className="pb-8 px-5 sm:px-4 max-w-md mx-auto space-y-6">
+    <div className="pb-8 px-5 sm:px-6 max-w-md mx-auto space-y-6">
       {/* Day Navigation */}
       <div className="flex items-center justify-between pt-6">
         <button
