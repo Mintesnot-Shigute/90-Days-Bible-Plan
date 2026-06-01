@@ -159,7 +159,7 @@ export function TodayTab({
       </div>
 
       {/* Reader Status */}
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between pl-2 pr-1">
         <p className="text-sm text-gray-600">Your status</p>
         {getStatusBadge()}
       </div>
@@ -169,7 +169,7 @@ export function TodayTab({
 
       {/* Readings */}
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-ink px-2">Today's Readings</h3>
+        <h3 className="text-sm font-semibold text-ink pl-2 pr-1">Today's Readings</h3>
         {readings.map((reading) => {
           const percentage = ((dayProgress as any)?.[reading.key] ?? 0) as number;
           const isExpanded = expandedReading === reading.key;
