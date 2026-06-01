@@ -102,6 +102,10 @@
   z-index: 40;
 }
 
+.container {
+  width: 100%;
+}
+
 .mx-auto {
   margin-inline: auto;
 }
@@ -339,6 +343,14 @@
 
 .text-\[11px\] {
   font-size: 11px;
+}
+
+.text-\[21px\] {
+  font-size: 21px;
+}
+
+.text-\[111px\] {
+  font-size: 111px;
 }
 
 .leading-none {
