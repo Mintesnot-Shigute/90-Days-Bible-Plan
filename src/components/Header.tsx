@@ -47,19 +47,19 @@ export function Header({
         animate="visible"
         variants={containerVariants}
       >
-        {/* Reader name - Centered with menu on right */}
+        {/* Reader name - Centered with menu on LEFT */}
         <motion.div className="flex items-center justify-between mb-4" variants={itemVariants}>
-          <div className="flex-1 text-center">
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink">{currentReader}</h1>
-          </div>
           <motion.button
             onClick={onOpenMenu}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors flex-shrink-0 ml-2"
+            className="p-2 hover:bg-gold hover:bg-opacity-10 rounded-lg transition-colors flex-shrink-0 mr-2"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-ink" />
           </motion.button>
+          <div className="flex-1 text-center">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink">{currentReader}</h1>
+          </div>
         </motion.div>
 
         {/* Stats row with better spacing */}
