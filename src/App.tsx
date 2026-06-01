@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
-import { NameGate, Header, TodayTab, PlanTab, GroupTab } from "./components";
+import { NameGate, Header, TodayTab, PlanTab, GroupTab, ReportTab } from "./components";
 import { useReaders, useProgress, useCurrentReader } from "./hooks";
 import "./App.css";
 
-type Tab = "today" | "plan" | "group";
+type Tab = "today" | "plan" | "group" | "report";
 
 function App() {
   const [tab, setTab] = useState<Tab>("today");
@@ -102,14 +102,20 @@ function App() {
               progress={progress}
             />
           )}
+          {tab === "report" && (
+            <ReportTab
+              readers={readers}
+              progress={progress}
+            />
+          )}
         </div>
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gold">
-        <div className="max-w-md mx-auto flex items-center justify-around">
+        <div className="max-w-md mx-auto flex items-center justify-around text-sm sm:text-base">
           <button
             onClick={() => setTab("today")}
-            className={`flex-1 py-3 sm:py-4 text-sm sm:text-base font-medium transition-colors min-h-[44px] flex items-center justify-center ${
+            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
               tab === "today"
                 ? "text-gold border-t-2 border-gold"
                 : "text-ink hover:text-gold"
@@ -119,7 +125,7 @@ function App() {
           </button>
           <button
             onClick={() => setTab("plan")}
-            className={`flex-1 py-3 sm:py-4 text-sm sm:text-base font-medium transition-colors min-h-[44px] flex items-center justify-center ${
+            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
               tab === "plan"
                 ? "text-gold border-t-2 border-gold"
                 : "text-ink hover:text-gold"
@@ -129,13 +135,23 @@ function App() {
           </button>
           <button
             onClick={() => setTab("group")}
-            className={`flex-1 py-3 sm:py-4 text-sm sm:text-base font-medium transition-colors min-h-[44px] flex items-center justify-center ${
+            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
               tab === "group"
                 ? "text-gold border-t-2 border-gold"
                 : "text-ink hover:text-gold"
             }`}
           >
             Group
+          </button>
+          <button
+            onClick={() => setTab("report")}
+            className={`flex-1 py-3 sm:py-4 font-medium transition-colors min-h-[44px] flex items-center justify-center ${
+              tab === "report"
+                ? "text-gold border-t-2 border-gold"
+                : "text-ink hover:text-gold"
+            }`}
+          >
+            Report
           </button>
         </div>
       </div>

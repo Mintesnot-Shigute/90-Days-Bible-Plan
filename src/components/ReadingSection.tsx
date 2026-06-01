@@ -6,11 +6,12 @@ interface ReadingSectionProps {
   type: ReadingType;
   label: string;
   reference: string;
-  isChecked: boolean;
+  percentage: number; // 0, 25, 50, 75, or 100
   isExpanded: boolean;
-  onToggleCheck: () => void;
+  onPercentageChange: (pct: number) => void;
   onToggleExpand: () => void;
   children?: React.ReactNode;
+  isLocked?: boolean; // for future day gating
 }
 
 const readingConfig = {
@@ -40,55 +41,47 @@ const readingConfig = {
   },
 };
 
+const percentOptions = [0, 25, 50, 75, 100];
+
 export function ReadingSection({
   type,
   label,
   reference,
-  isChecked,
+  percentage,
   isExpanded,
-  onToggleCheck,
+  onPercentageChange,
   onToggleExpand,
   children,
+  isLocked = false,
 }: ReadingSectionProps) {
   const config = readingConfig[type];
+  const isComplete = percentage === 100;
 
   return (
     <div>
+      {/* Main Header */}
       <button
         onClick={onToggleExpand}
+        disabled={isLocked}
         className={`w-full p-3 sm:p-4 rounded-lg border-2 transition-all ${
-          isChecked
+          isLocked
+            ? "opacity-50 cursor-not-allowed border-gray-300 bg-gray-100"
+            : isComplete
             ? `${config.color} border-2 ${config.accentBg.replace("bg-", "border-")}`
             : "border-gray-300 hover:border-opacity-50 hover:bg-opacity-5"
         }`}
       >
         <div className="flex items-start justify-between gap-2 sm:gap-3">
           <div className="flex items-start flex-1 gap-2 sm:gap-3">
-            {/* Checkbox */}
+            {/* Percentage Badge */}
             <div
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleCheck();
-              }}
-              className={`w-7 h-7 sm:w-6 sm:h-6 rounded border-2 flex-shrink-0 flex items-center justify-center cursor-pointer transition-colors ${
-                isChecked
-                  ? `${config.accentBg} border-opacity-0`
-                  : "border-gray-400 hover:border-opacity-70"
+              className={`w-8 h-8 sm:w-7 sm:h-7 rounded flex-shrink-0 flex items-center justify-center font-bold text-white text-xs transition-colors ${
+                isComplete
+                  ? `${config.accentBg}`
+                  : "bg-gray-300"
               }`}
             >
-              {isChecked && (
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              )}
+              {percentage}%
             </div>
 
             {/* Content */}
@@ -111,8 +104,41 @@ export function ReadingSection({
         </div>
       </button>
 
-      {/* Expanded Content */}
-      {isExpanded && children}
+      {/* Expanded Content with Percentage Selector */}
+      {isExpanded && (
+        <div className="mt-3 space-y-3">
+          {children}
+
+          {/* Percentage Selector */}
+          <div className="p-4 bg-parchment rounded-lg space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+              Completion
+            </p>
+            <div className="grid grid-cols-5 gap-2">
+              {percentOptions.map((pct) => (
+                <button
+                  key={pct}
+                  onClick={() => {
+                    if (!isLocked) {
+                      onPercentageChange(pct);
+                    }
+                  }}
+                  disabled={isLocked}
+                  className={`py-2 px-2 rounded-lg font-semibold text-sm transition-all ${
+                    isLocked
+                      ? "opacity-50 cursor-not-allowed"
+                      : percentage === pct
+                      ? `${config.accentBg} text-white shadow-md`
+                      : `bg-white border-2 border-gray-200 hover:border-opacity-70 text-gray-700`
+                  }`}
+                >
+                  {pct}%
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

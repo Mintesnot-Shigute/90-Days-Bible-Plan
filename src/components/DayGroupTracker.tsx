@@ -20,14 +20,14 @@ export function DayGroupTracker({
       {/* Summary Stats */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-sm font-medium text-gray-600">Day {day} Group</p>
-          <p className="text-2xl font-bold text-gold">
-            {stats.readersCompleteDay}/{readers.length} done
+          <p className="text-xs sm:text-sm font-medium text-gray-600">Day {day} Group</p>
+          <p className="text-xl sm:text-2xl font-bold text-gold">
+            {stats.readersCompleteDay}/{readers.length} complete
           </p>
         </div>
         <div className="text-right">
-          <p className="text-sm text-gray-600">Progress</p>
-          <p className="text-2xl font-bold text-ink">{stats.completionPercent}%</p>
+          <p className="text-xs sm:text-sm text-gray-600">Average</p>
+          <p className="text-xl sm:text-2xl font-bold text-ink">{stats.completionPercent}%</p>
         </div>
       </div>
 
@@ -42,12 +42,12 @@ export function DayGroupTracker({
       {/* Reader List */}
       <div className="space-y-2">
         {stats.readerStats.map((reader) => (
-          <div key={reader.name} className="flex items-center justify-between text-sm">
+          <div key={reader.name} className="flex items-center justify-between text-xs sm:text-sm">
             <div className="flex items-center gap-2 flex-1 min-w-0">
               {reader.dayCompleted ? (
-                <CheckCircle2 className="w-5 h-5 text-gold flex-shrink-0" />
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-gold flex-shrink-0" />
               ) : (
-                <Circle className="w-5 h-5 text-gray-300 flex-shrink-0" />
+                <Circle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300 flex-shrink-0" />
               )}
               <span className={`truncate font-medium ${reader.dayCompleted ? "text-ink" : "text-gray-600"}`}>
                 {reader.name}
@@ -57,11 +57,11 @@ export function DayGroupTracker({
               <div className="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div
                   className="bg-gold h-full transition-all duration-300"
-                  style={{ width: `${reader.completionPercent}%` }}
+                  style={{ width: `${reader.dayPercent}%` }}
                 />
               </div>
-              <span className="text-xs text-gray-600 min-w-[30px] text-right">
-                {reader.readingsCompleted}/4
+              <span className="text-xs text-gray-600 min-w-[30px] text-right font-semibold">
+                {reader.dayPercent}%
               </span>
             </div>
           </div>

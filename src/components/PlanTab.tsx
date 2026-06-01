@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Progress, Reader } from "../types";
-import { isDayComplete } from "../lib/stats";
+import { isDayComplete, getDayPercent } from "../lib/stats";
 import { getDayDate, formatDateShort } from "../lib/dates";
 
 interface PlanTabProps {
@@ -18,19 +18,14 @@ export function PlanTab({
     const data: Array<{
       day: number;
       complete: boolean;
-      partial: number;
+      percentage: number;
     }> = [];
 
     for (let day = 1; day <= 90; day++) {
-      const p = progress.find(
-        (x) => x.reader_name === currentReader && x.day === day
-      );
-      const complete = p ? p.ot && p.nt && p.ps && p.pr : false;
-      const partial = p
-        ? [p.ot, p.nt, p.ps, p.pr].filter(Boolean).length
-        : 0;
+      const complete = isDayComplete(currentReader, day, progress);
+      const percentage = getDayPercent(currentReader, day, progress);
 
-      data.push({ day, complete, partial });
+      data.push({ day, complete, percentage });
     }
 
     return data;
@@ -39,15 +34,15 @@ export function PlanTab({
   const getGradientId = (day: number) => `grad-${day}`;
 
   return (
-    <div className="pb-8 px-2 sm:px-0">
-      <h2 className="text-xl sm:text-2xl font-serif text-ink mb-4 sm:mb-6">90-Day Plan</h2>
-      <div className="grid grid-cols-6 sm:grid-cols-9 md:grid-cols-10 gap-1 sm:gap-2">
+    <div className="pb-8 px-5 sm:px-4 max-w-md mx-auto">
+      <h2 className="text-2xl sm:text-3xl font-serif text-ink mb-6 pt-6">90-Day Plan</h2>
+      <div className="grid grid-cols-6 sm:grid-cols-9 md:grid-cols-10 gap-2">
         {gridData.map((item) => (
           <button
             key={item.day}
             onClick={() => onSelectDay(item.day)}
             title={`Day ${item.day} - ${formatDateShort(getDayDate(item.day))}`}
-            className="aspect-square rounded-lg border border-sm:border-2 border-gray-300 hover:border-gold transition-all relative overflow-hidden group"
+            className="aspect-square rounded-lg border-2 border-gray-300 hover:border-gold transition-all relative overflow-hidden group"
           >
             {item.complete ? (
               <div className="w-full h-full bg-gold flex items-center justify-center">
@@ -64,7 +59,7 @@ export function PlanTab({
                       x1="0%"
                       y1="100%"
                       x2="0%"
-                      y2={`${100 - (item.partial / 4) * 100}%`}
+                      y2={`${100 - item.percentage}%`}
                     >
                       <stop offset="0%" stopColor="#b8860b" />
                       <stop offset="100%" stopColor="transparent" />

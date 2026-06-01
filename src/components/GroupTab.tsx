@@ -37,9 +37,11 @@ export function GroupTab({
   }, [readers, progress]);
 
   return (
-    <div className="pb-8 px-2 sm:px-0 space-y-6">
+    <div className="pb-8 px-5 sm:px-4 max-w-md mx-auto space-y-6">
       {/* Progress Hero */}
-      <GroupProgressHero readers={readers} progress={progress} />
+      <div className="pt-6">
+        <GroupProgressHero readers={readers} progress={progress} />
+      </div>
 
       {/* Leaderboard */}
 

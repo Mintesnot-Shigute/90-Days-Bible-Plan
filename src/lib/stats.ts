@@ -3,7 +3,7 @@ import { Progress, Reader } from "../types";
 export function getReaderProgress(
   readerName: string,
   progress: Progress[]
-): Map<number, { ot: boolean; nt: boolean; ps: boolean; pr: boolean }> {
+): Map<number, { ot: number; nt: number; ps: number; pr: number }> {
   const map = new Map();
   progress
     .filter((p) => p.reader_name === readerName)
@@ -13,13 +13,30 @@ export function getReaderProgress(
   return map;
 }
 
+/**
+ * Calculate day completion percentage (0-100)
+ * Returns average of four section percentages
+ */
+export function getDayPercent(
+  readerName: string,
+  day: number,
+  progress: Progress[]
+): number {
+  const p = progress.find((x) => x.reader_name === readerName && x.day === day);
+  if (!p) return 0;
+  return Math.round((p.ot + p.nt + p.ps + p.pr) / 4);
+}
+
+/**
+ * Check if a day is fully complete (all 4 sections = 100%)
+ */
 export function isDayComplete(
   readerName: string,
   day: number,
   progress: Progress[]
 ): boolean {
   const p = progress.find((x) => x.reader_name === readerName && x.day === day);
-  return p ? p.ot && p.nt && p.ps && p.pr : false;
+  return p ? p.ot === 100 && p.nt === 100 && p.ps === 100 && p.pr === 100 : false;
 }
 
 export function countCompleteDays(
@@ -29,10 +46,10 @@ export function countCompleteDays(
   return progress.filter(
     (p) =>
       p.reader_name === readerName &&
-      p.ot &&
-      p.nt &&
-      p.ps &&
-      p.pr
+      p.ot === 100 &&
+      p.nt === 100 &&
+      p.ps === 100 &&
+      p.pr === 100
   ).length;
 }
 

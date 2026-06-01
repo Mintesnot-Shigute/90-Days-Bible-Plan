@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
 import { PLAN } from "../plan";
 import { Progress, Reader } from "../types";
-import { isDayComplete } from "../lib/stats";
+import { isDayComplete, getDayPercent } from "../lib/stats";
 import { getTodaysDayNumber, getDayDate, formatDateShort, isPlanComplete } from "../lib/dates";
 import { getReaderStatus } from "../lib/groupStats";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { ReadingSection } from "./ReadingSection";
 import { DayGroupTracker } from "./DayGroupTracker";
@@ -47,7 +47,7 @@ export function TodayTab({
     [progress, currentReader, selectedDay]
   );
 
-  // Calculate reader's current day number
+  // Calculate reader's current day number (first incomplete day)
   const readerCurrentDay = useMemo(() => {
     for (let day = 1; day <= 90; day++) {
       if (!isDayComplete(currentReader, day, progress)) {
@@ -57,19 +57,25 @@ export function TodayTab({
     return 90;
   }, [progress, currentReader]);
 
+  // Calculate day percentage (average of 4 sections)
+  const dayPercentage = useMemo(() => {
+    return getDayPercent(currentReader, selectedDay, progress);
+  }, [currentReader, selectedDay, progress]);
+
+  // Day-gating: check if day is in future
+  const isDayLocked = selectedDay > todaysDayNumber;
+
   const readerStatus = getReaderStatus(readerCurrentDay, todaysDayNumber);
 
-  const toggleReading = async (field: "ot" | "nt" | "ps" | "pr") => {
-    if (!dayPlan) return;
-
-    const newValue = !((dayProgress as any)?.[field] ?? false);
+  const updateReading = async (field: "ot" | "nt" | "ps" | "pr", value: number) => {
+    if (!dayPlan || isDayLocked) return;
 
     try {
       const { error } = await supabase.from("progress").upsert(
         {
           reader_name: currentReader,
           day: selectedDay,
-          [field]: newValue,
+          [field]: value,
           updated_at: new Date().toISOString(),
         },
         { onConflict: "reader_name,day" }
@@ -92,6 +98,9 @@ export function TodayTab({
   ];
 
   const getStatusBadge = () => {
+    if (isDayLocked) {
+      return <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full font-medium flex items-center gap-1"><Lock className="w-3 h-3" /> Locked</span>;
+    }
     if (readerStatus === "ahead") {
       return <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full font-medium">Ahead 🚀</span>;
     }
@@ -102,9 +111,9 @@ export function TodayTab({
   };
 
   return (
-    <div className="pb-8 space-y-6">
+    <div className="pb-8 px-5 sm:px-4 max-w-md mx-auto space-y-6">
       {/* Day Navigation */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between pt-6">
         <button
           onClick={() => setSelectedDay(Math.max(1, selectedDay - 1))}
           disabled={selectedDay === 1}
@@ -114,29 +123,44 @@ export function TodayTab({
         </button>
         
         <div className="text-center">
-          <h2 className="text-xl sm:text-2xl font-serif text-ink">
+          <h2 className="text-2xl sm:text-3xl font-serif text-ink">
             Day {selectedDay}
           </h2>
-          <p className="text-xs sm:text-sm text-gray-600 mt-1">
+          <p className="text-sm text-gray-600 mt-1">
             {formatDateShort(getDayDate(selectedDay))}
           </p>
           {selectedDay === todaysDayNumber && (
             <p className="text-xs text-gold font-medium mt-1">Today</p>
           )}
+          {isDayLocked && (
+            <p className="text-xs text-gray-500 mt-1 flex items-center justify-center gap-1">
+              <Lock className="w-3 h-3" /> Unlocks tomorrow
+            </p>
+          )}
         </div>
 
         <button
           onClick={() => setSelectedDay(Math.min(90, selectedDay + 1))}
-          disabled={selectedDay === 90}
+          disabled={selectedDay === 90 || isDayLocked}
           className="p-2 disabled:opacity-50 hover:bg-gold hover:bg-opacity-10 rounded transition-colors"
         >
           <ChevronRight className="w-6 h-6 text-gold" />
         </button>
       </div>
 
+      {/* Day Percentage Display */}
+      <div className="bg-parchment rounded-lg p-4 text-center">
+        <p className="text-4xl sm:text-5xl font-bold text-gold">
+          {dayPercentage}%
+        </p>
+        <p className="text-xs sm:text-sm text-gray-600 mt-2">
+          {dayPercentage === 100 ? "Day Complete! 🎉" : "Today's Progress"}
+        </p>
+      </div>
+
       {/* Reader Status */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600">Your progress</p>
+      <div className="flex items-center justify-between px-1">
+        <p className="text-sm text-gray-600">Your status</p>
         {getStatusBadge()}
       </div>
 
@@ -147,7 +171,7 @@ export function TodayTab({
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-ink px-1">Today's Readings</h3>
         {readings.map((reading) => {
-          const isChecked = (dayProgress as any)?.[reading.key] ?? false;
+          const percentage = ((dayProgress as any)?.[reading.key] ?? 0) as number;
           const isExpanded = expandedReading === reading.key;
 
           return (
@@ -156,12 +180,13 @@ export function TodayTab({
                 type={reading.key}
                 label={reading.label}
                 reference={reading.value}
-                isChecked={isChecked}
+                percentage={percentage}
                 isExpanded={isExpanded}
-                onToggleCheck={() => toggleReading(reading.key)}
+                onPercentageChange={(pct) => updateReading(reading.key, pct)}
                 onToggleExpand={() =>
                   setExpandedReading(isExpanded ? null : reading.key)
                 }
+                isLocked={isDayLocked}
               >
                 {/* Verse Display */}
                 {isExpanded && (

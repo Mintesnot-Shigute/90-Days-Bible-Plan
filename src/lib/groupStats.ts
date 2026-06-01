@@ -1,15 +1,15 @@
 import { Reader, Progress } from "../types";
+import { isDayComplete, getDayPercent } from "./stats";
 
 export interface DayGroupStats {
   day: number;
-  totalReadingsCompleted: number; // 0-32 (8 readers × 4 readings)
-  readersCompleteDay: number; // 0-8
-  completionPercent: number; // 0-100
+  totalReadingsPercent: number; // average % across all readers
+  readersCompleteDay: number; // count of readers with 100% on day
+  completionPercent: number; // 0-100 (same as totalReadingsPercent but named differently for clarity)
   readerStats: Array<{
     name: string;
-    readingsCompleted: number; // 0-4
-    dayCompleted: boolean;
-    completionPercent: number;
+    dayPercent: number; // 0-100 (average of 4 sections)
+    dayCompleted: boolean; // true if all 4 sections = 100
   }>;
 }
 
@@ -19,41 +19,53 @@ export function getDayGroupStats(
   progress: Progress[]
 ): DayGroupStats {
   const readerStats = readers.map((reader) => {
-    const dayProgress = progress.find(
-      (p) => p.reader_name === reader.name && p.day === day
-    );
-
-    const readingsCompleted = dayProgress
-      ? [dayProgress.ot, dayProgress.nt, dayProgress.ps, dayProgress.pr].filter(
-          Boolean
-        ).length
-      : 0;
-
-    const dayCompleted = readingsCompleted === 4;
+    const dayPercent = getDayPercent(reader.name, day, progress);
+    const dayCompleted = isDayComplete(reader.name, day, progress);
 
     return {
       name: reader.name,
-      readingsCompleted,
+      dayPercent,
       dayCompleted,
-      completionPercent: Math.round((readingsCompleted / 4) * 100),
     };
   });
 
-  const totalReadingsCompleted = readerStats.reduce(
-    (sum, stats) => sum + stats.readingsCompleted,
-    0
+  const totalReadingsPercent = Math.round(
+    readerStats.reduce((sum, stats) => sum + stats.dayPercent, 0) / readers.length
   );
   const readersCompleteDay = readerStats.filter((s) => s.dayCompleted).length;
-  const maxReadings = readers.length * 4;
-  const completionPercent = Math.round((totalReadingsCompleted / maxReadings) * 100);
 
   return {
     day,
-    totalReadingsCompleted,
+    totalReadingsPercent,
     readersCompleteDay,
-    completionPercent,
+    completionPercent: totalReadingsPercent,
     readerStats,
   };
+}
+
+/**
+ * Get completed days report: list all days where reader completed all 4 sections with timestamp
+ */
+export function getCompletedDaysReport(
+  readers: Reader[],
+  progress: Progress[]
+): Array<{
+  readerName: string;
+  day: number;
+  dayPercent: number;
+  timestamp: Date;
+}> {
+  const completed = progress
+    .filter((p) => p.ot === 100 && p.nt === 100 && p.ps === 100 && p.pr === 100)
+    .map((p) => ({
+      readerName: p.reader_name,
+      day: p.day,
+      dayPercent: 100,
+      timestamp: new Date(p.updated_at),
+    }))
+    .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+
+  return completed;
 }
 
 export function getReaderActivity(
@@ -72,7 +84,7 @@ export function getReaderActivity(
       readerName: p.reader_name,
       day: p.day,
       timestamp: new Date(p.updated_at),
-      type: p.ot && p.nt && p.ps && p.pr ? ("day_complete" as const) : ("reading_complete" as const),
+      type: p.ot === 100 && p.nt === 100 && p.ps === 100 && p.pr === 100 ? ("day_complete" as const) : ("reading_complete" as const),
     }))
     .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
     .slice(0, limit);
