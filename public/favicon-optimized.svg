@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" fill="none">
+  <defs>
+    <linearGradient id="coverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3d2817;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a1a0f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pagesGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#faf7f2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f0e8dc;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Book spine -->
+  <rect x="82" y="15" width="28" height="162" fill="#1f1410" rx="3"/>
+  
+  <!-- Left page -->
+  <rect x="22" y="15" width="60" height="162" fill="url(#coverGrad)" stroke="#1f1410" stroke-width="1.5" rx="4"/>
+  
+  <!-- Right page (front) -->
+  <rect x="110" y="15" width="60" height="162" fill="url(#pagesGrad)" stroke="#1f1410" stroke-width="1.5" rx="4"/>
+  
+  <!-- Decorative gold border -->
+  <rect x="118" y="24" width="44" height="144" fill="none" stroke="#b8956a" stroke-width="1.5" rx="2"/>
+  
+  <!-- Gold cross -->
+  <g transform="translate(140, 96)">
+    <rect x="-2" y="-22" width="4" height="44" fill="#b8956a" rx="2"/>
+    <rect x="-18" y="-2" width="36" height="4" fill="#b8956a" rx="2"/>
+  </g>
+  
+  <!-- Shine -->
+  <rect x="24" y="17" width="3" height="158" fill="white" opacity="0.12" rx="2"/>
+</svg>

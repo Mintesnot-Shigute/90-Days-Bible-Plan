@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "preview": "next start"
+    "preview": "next start",
+    "favicons": "node scripts/generate-favicons.js",
+    "favicons:setup": "npm install sharp --save-dev && node scripts/generate-favicons.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.2",
