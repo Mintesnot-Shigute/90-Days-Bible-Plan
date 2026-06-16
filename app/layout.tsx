@@ -4,6 +4,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: '90-days-bible-reading',
   description: 'Share the journey with friends',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
