@@ -1,6 +1,10 @@
 import { Reader, Progress } from "../types";
 import { isDayComplete, getDayPercent } from "./stats";
 
+// Note: All day calculations use the Ethiopian day system
+// A day runs from 6:00 AM to 5:59:59 AM the next calendar day
+// Times between 12:00 AM and 5:59 AM are considered part of the previous Ethiopian day
+
 export interface DayGroupStats {
   day: number;
   totalReadingsPercent: number; // average % across all readers
@@ -45,6 +49,7 @@ export function getDayGroupStats(
 
 /**
  * Get completed days report: list all days where reader completed all 4 sections with timestamp
+ * Uses Ethiopian day system for day assignment
  */
 export function getCompletedDaysReport(
   readers: Reader[],

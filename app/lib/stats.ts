@@ -109,7 +109,10 @@ export function getReaderStats(
 
 /**
  * Calculate fine in birr for missed days (50 birr per missed day)
- * A day is considered missed if it has passed (before today) and is not complete
+ * A day is considered missed if it has passed (before today in Ethiopian day system) and is not complete
+ * 
+ * Uses Ethiopian day system: a day starts at 6:00 AM and ends at 5:59:59 AM the next calendar day
+ * Times between 12:00 AM and 5:59 AM are considered part of the previous Ethiopian day
  */
 export function calculateFine(
   readerName: string,
@@ -118,7 +121,7 @@ export function calculateFine(
   const todaysDayNumber = getTodaysDayNumber();
   let missedDays = 0;
 
-  // Count missed days: any day that has passed and is not complete
+  // Count missed days: any Ethiopian day that has passed and is not complete
   for (let day = 1; day < todaysDayNumber; day++) {
     if (!isDayComplete(readerName, day, progress)) {
       missedDays++;
