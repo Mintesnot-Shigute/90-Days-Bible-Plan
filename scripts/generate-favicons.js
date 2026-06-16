@@ -5,10 +5,12 @@
  * Run with: node scripts/generate-favicons.js
  */
 
-const sharp = require('sharp');
-const fs = require('fs');
-const path = require('path');
+import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, '../public');
 const FAVICON_SRC = path.join(PUBLIC_DIR, 'favicon-optimized.svg');
 
@@ -88,7 +90,7 @@ async function generateFavicons() {
 
 // Check if sharp is installed
 try {
-  require.resolve('sharp');
+  import.meta.resolve('sharp');
 } catch (error) {
   console.error('❌ Error: sharp module not found');
   console.log('\nTo install sharp, run:');
