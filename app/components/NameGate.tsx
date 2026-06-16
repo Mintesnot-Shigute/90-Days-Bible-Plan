@@ -17,7 +17,7 @@ export function NameGate({ readers, onSelectReader, loading }: NameGateProps) {
   const [error, setError] = useState("");
   const [isJoining, setIsJoining] = useState(false);
   const [focused, setFocused] = useState(false);
-
+  
   const handleJoinNew = async () => {
     const trimmed = newName.trim();
     if (!trimmed) {
